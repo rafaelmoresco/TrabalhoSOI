@@ -23,10 +23,16 @@ class CPU
             Context(void (* func)(Tn ...), Tn ... an){
                 getcontext(&_context);
                 _stack = new char[STACK_SIZE]; // alocação da pilha
-                _context.uc_stack.ss_sp = &_stack; // ponteiro para o topo da pilha
-                _context.uc_stack.ss_size = STACK_SIZE; // tamanho da pilha
-                _context.uc_link = 0;
-                _context.uc_stack.ss_flags=0;
+                
+                if(_stack) {
+                    _context.uc_stack.ss_sp = &_stack; // ponteiro para o topo da pilha
+                    _context.uc_stack.ss_size = STACK_SIZE; // tamanho da pilha
+                    _context.uc_link = 0;
+                    _context.uc_stack.ss_flags=0;
+                } else {
+                    std::cout << "Failed to make stack\n";
+                    return -1;
+                }
 
                 // 3º parametro é um inteiro que representa o número de argumentos
                 // 4º parametro "..." representa os argumentos que podem receber qualquer número

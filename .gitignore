@@ -1,0 +1,5 @@
+main
+cpu.o
+main_class.o
+valgrind-out.txt
+.vscode/
