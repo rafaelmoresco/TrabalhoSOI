@@ -31,7 +31,6 @@ class CPU
                     _context.uc_stack.ss_flags=0;
                 } else {
                     std::cout << "Failed to make stack\n";
-                    return -1;
                 }
 
                 // 3º parametro é um inteiro que representa o número de argumentos

@@ -1,4 +1,5 @@
 main
+main.o
 cpu.o
 main_class.o
 valgrind-out.txt
