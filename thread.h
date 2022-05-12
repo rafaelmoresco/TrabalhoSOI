@@ -20,7 +20,9 @@ public:
      * PS: devido ao template, este método deve ser implementado neste mesmo arquivo .h
      */ 
     template<typename ... Tn>
-    Thread(void (* entry)(Tn ...), Tn ... an);
+    Thread(void (* entry)(Tn ...), Tn ... an) {
+        _context = new Context(void (* entry)(Tn ...), Tn ... an);
+    }
 
     /*
      * Retorna a Thread que está em execução.
