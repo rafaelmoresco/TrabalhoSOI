@@ -29,6 +29,9 @@ public:
     Thread(void (* entry)(Tn ...), Tn ... an) {
         db<Thread>(TRC) << "Thread::Thread(void (* entry)(Tn ...), Tn ... an)\n";
         _context = new Context(entry, an...);
+        if (!(_context)) {
+            throw "falha em criar contexto";
+        }
     }
 
     /*
@@ -65,7 +68,6 @@ public:
 
     Context * volatile context(); 
 
-    static void setRunning(Thread * running);
 private:
     int _id;
     Context * volatile _context;

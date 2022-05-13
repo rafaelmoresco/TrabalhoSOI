@@ -15,9 +15,13 @@ __BEGIN_API
      */ 
     int Thread::switch_context(Thread * prev, Thread * next) {
         db<Thread>(TRC)<<"Thread::switch_context()\n";
-        CPU::switch_context(prev->_context, next->_context);
-        //Thread::setRunning(next);
-        _running = next;
+        try {
+            CPU::switch_context(prev->_context, next->_context);
+            //Thread::setRunning(next);
+            _running = next;
+        } catch (...) {
+            return -1;
+        }
         return 0;
     }
 
@@ -47,8 +51,5 @@ __BEGIN_API
         return Thread::_context;
     }
 
-    void Thread::setRunning(Thread * running) {
-        Thread::_running = running;
-    }
 
 __END_API

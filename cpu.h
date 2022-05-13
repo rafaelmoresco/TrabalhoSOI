@@ -35,7 +35,7 @@ class CPU
                     _context.uc_link = 0;
                     _context.uc_stack.ss_flags=0;
                 } else {
-                    std::cout << "Falhou ao montar a pilha\n";
+                   throw "Falhou ao montar a pilha";
                 }
     
                 // 3º parametro é um inteiro que representa o número de argumentos
