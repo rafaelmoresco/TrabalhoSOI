@@ -66,7 +66,6 @@ public:
     Context * volatile context(); 
 
     static void setRunning(Thread * running);
-
 private:
     int _id;
     Context * volatile _context;

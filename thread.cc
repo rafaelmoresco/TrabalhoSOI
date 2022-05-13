@@ -5,7 +5,6 @@
 #include <iostream>
 
 __BEGIN_API
-
     Thread * Thread::_running = nullptr;
 
     /*
