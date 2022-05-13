@@ -13,6 +13,12 @@ protected:
     typedef CPU::Context Context;
 
 public:
+    Thread() {
+        db<Thread>(TRC) << "Thread::Thread()\n";
+        _id = -1;
+        db<Thread>(TRC) << "Thread::Thread: Criou thread" << _id << "\n";
+    }
+
     /*
      * Cria uma Thread passando um ponteiro para a função a ser executada
      * e os parâmetros passados para a função, que podem variar.
@@ -21,6 +27,7 @@ public:
      */ 
     template<typename ... Tn>
     Thread(void (* entry)(Tn ...), Tn ... an) {
+        db<Thread>(TRC) << "Thread::Thread(void (* entry)(Tn ...), Tn ... an)\n";
         _context = new Context(entry, an...);
         _running = this;
     }
@@ -28,7 +35,10 @@ public:
     /*
      * Retorna a Thread que está em execução.
      */ 
-    static Thread * running() { return _running; }
+    static Thread * running() { 
+        db<Thread>(TRC)<<"Thread::running()\n";
+        return _running; 
+    }
 
     /*
      * Método para trocar o contexto entre duas thread, a anterior (prev)

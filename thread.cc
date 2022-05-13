@@ -11,6 +11,7 @@ __BEGIN_API
      * Valor de retorno é negativo se houve erro, ou zero.
      */ 
     int Thread::switch_context(Thread * prev, Thread * next) {
+        db<Thread>(TRC)<<"Thread::switch_context()\n";
         CPU::switch_context(prev->_context, next->_context);
         return 0;
     }
@@ -21,6 +22,7 @@ __BEGIN_API
      * Quando a thread encerra, o controle deve retornar à main. 
      */  
     void Thread::thread_exit (int exit_code) {
+        db<Thread>(TRC)<<"Thread::exit()\n";
         delete[] Thread::_context;
     }
 
@@ -28,6 +30,7 @@ __BEGIN_API
      * Retorna o ID da thread.
      */ 
     int Thread::id() {
+        db<Thread>(TRC)<<"Thread::id()\n";
         return Thread::_id;
     }
 
@@ -35,6 +38,7 @@ __BEGIN_API
      * Qualquer outro método que você achar necessário para a solução.
      */ 
     CPU::Context * volatile Thread::context() {
+        db<Thread>(TRC)<<"Thread::context()\n";
         return Thread::_context;
     }
 
