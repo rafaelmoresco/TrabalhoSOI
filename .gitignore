@@ -2,5 +2,6 @@ main
 main.o
 cpu.o
 main_class.o
+thread.o
 valgrind-out.txt
 .vscode/
