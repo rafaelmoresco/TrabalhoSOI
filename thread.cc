@@ -6,6 +6,7 @@
 
 __BEGIN_API
 
+    Thread::_running = nullptr;
 
     /*
      * Método para trocar o contexto entre duas thread, a anterior (prev)
@@ -16,7 +17,8 @@ __BEGIN_API
     int Thread::switch_context(Thread * prev, Thread * next) {
         db<Thread>(TRC)<<"Thread::switch_context()\n";
         CPU::switch_context(prev->_context, next->_context);
-        Thread::setRunning(next);
+        //Thread::setRunning(next);
+        Thread::_running = next;
         return 0;
     }
 
