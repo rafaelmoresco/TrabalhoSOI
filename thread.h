@@ -21,7 +21,8 @@ public:
      */ 
     template<typename ... Tn>
     Thread(void (* entry)(Tn ...), Tn ... an) {
-        _context = new Context(void (* entry)(Tn ...), Tn ... an);
+        _context = new Context(entry, an...);
+        _running = this;
     }
 
     /*

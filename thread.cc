@@ -10,9 +10,9 @@ __BEGIN_API
      * Deve encapsular a chamada para a troca de contexto realizada pela class CPU.
      * Valor de retorno é negativo se houve erro, ou zero.
      */ 
-    static int Thread::switch_context(Thread * prev, Thread * next) {
-        CPU::switch_context(prev->_context, next->_context)
-        Thread::_running = next;
+    int Thread::switch_context(Thread * prev, Thread * next) {
+        CPU::switch_context(prev->_context, next->_context);
+        return 0;
     }
 
     /*
