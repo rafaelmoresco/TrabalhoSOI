@@ -28,7 +28,7 @@ __BEGIN_API
      */  
     void Thread::thread_exit (int exit_code) {
         db<Thread>(TRC)<<"Thread::exit()\n";
-        delete[] Thread::_context;
+        delete Thread::_context;
     }
 
     /*
