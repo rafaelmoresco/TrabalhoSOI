@@ -14,7 +14,7 @@ __BEGIN_API
      */ 
     int Thread::switch_context(Thread * prev, Thread * next) {
         CPU::switch_context(prev->_context, next->_context);
-        _running = next;
+        Thread::_running = next;
         return 0;
     }
 
