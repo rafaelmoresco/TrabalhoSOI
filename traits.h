@@ -16,13 +16,13 @@ class Debug;
 //declaração da classe Traits
 template<typename T>
 struct Traits {
-	static const bool debugged = true;
+	static const bool debugged = false;
 };
 
 template<> struct Traits<CPU>
 {
     static const unsigned int STACK_SIZE = 4096;
-	static const bool debugged = true;
+	static const bool debugged = false;
 };
 
 template<> struct Traits<Debug>: public Traits<void>

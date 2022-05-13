@@ -21,7 +21,7 @@ __BEGIN_API
      * Quando a thread encerra, o controle deve retornar à main. 
      */  
     void Thread::thread_exit (int exit_code) {
-
+        delete[] Thread::_context;
     }
 
     /*
@@ -34,6 +34,8 @@ __BEGIN_API
     /*
      * Qualquer outro método que você achar necessário para a solução.
      */ 
-
+    CPU::Context * volatile Thread::context() {
+        return Thread::_context;
+    }
 
 __END_API

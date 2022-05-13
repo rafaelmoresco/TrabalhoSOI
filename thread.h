@@ -52,7 +52,9 @@ public:
 
     /*
      * Qualquer outro método que você achar necessário para a solução.
-     */ 
+     */
+
+    Context * volatile context(); 
 
 private:
     int _id;
