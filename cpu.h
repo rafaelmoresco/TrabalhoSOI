@@ -18,7 +18,7 @@ class CPU
             static const unsigned int STACK_SIZE = Traits<CPU>::STACK_SIZE;
         public:
             Context() {
-                db<CPU>(TRC)<<"CPU::Context::Context() foi chamada\n";
+                db<CPU>(TRC)<<"CPU::Context::Context()\n";
                 _stack = 0; 
             }
 
@@ -35,7 +35,7 @@ class CPU
                     _context.uc_link = 0;
                     _context.uc_stack.ss_flags=0;
                 } else {
-                    std::cout << "Failed to make stack\n";
+                    std::cout << "Falhou ao montar a pilha\n";
                 }
     
                 // 3º parametro é um inteiro que representa o número de argumentos
