@@ -6,7 +6,6 @@
 
 __BEGIN_API
 
-    static SOLUTION::Thread* _running = nullptr;
 
     /*
      * Método para trocar o contexto entre duas thread, a anterior (prev)
