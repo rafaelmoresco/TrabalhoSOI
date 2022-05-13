@@ -1,5 +1,7 @@
 #include "thread.h"
 #include "cpu.h"
+#include "traits.h"
+#include "debug.h"
 #include <iostream>
 
 __BEGIN_API
@@ -12,6 +14,7 @@ __BEGIN_API
      */ 
     int Thread::switch_context(Thread * prev, Thread * next) {
         CPU::switch_context(prev->_context, next->_context);
+        _running = next;
         return 0;
     }
 
