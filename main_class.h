@@ -4,44 +4,30 @@
 #include <iostream>
 #include "cpu.h"
 #include "traits.h"
-#include "thread.h"
 
 __BEGIN_API
 
 class Main
 {
 public:
-    Main() {
-        main_name = "main";
-        ping_name = "    Ping";
-        pong_name = "        Pong";
-        ThreadMain = new Thread(run, (char *) main_name.data());
-        ping = new Thread(func_ping, (char *) ping_name.data());
-        pong = new Thread(func_pong, (char *) pong_name.data());
-        
-        mainContext = new CPU::Context();
+    Main() {}
 
-        CPU::switch_context(mainContext, ThreadMain->context());
+    static void run() {
+        std::cout << "main: inicio\n";
 
-        delete mainContext;
-    }
+        ContextMain = new CPU::Context();
+        ping_name = "ping";
+        pong_name = "pong";
 
-    static void run(char * arg) {
-        std::cout << arg << ": inicio\n";
+        ping = new CPU::Context(func_ping, (char *) ping_name.data());
+        pong = new CPU::Context(func_pong, (char *) pong_name.data());
 
-        Thread::switch_context(ThreadMain, ping);
-        Thread::switch_context(ThreadMain, pong);
+        CPU::switch_context(ContextMain, ping) ;
+        CPU::switch_context(ContextMain, pong) ;
 
-        std::cout << arg << ": fim\n";
+        std::cout << "main: fim\n";
 
-        CPU::switch_context(ThreadMain->context(), mainContext);
-    }
-
-    ~Main() {
-        ThreadMain->thread_exit(0);
-        ping->thread_exit(0);
-        pong->thread_exit(0);
-        delete ThreadMain;
+        delete ContextMain;
         delete ping;
         delete pong;
     }
@@ -59,11 +45,11 @@ private:
         for (i = 0; i < ITERATIONS; i++)
         {
             std::cout << arg << i << "\n" ;
-            Thread::switch_context(ping, pong);
+            CPU::switch_context(ping, pong);
         }
         std::cout << arg << ": fim\n";
 
-        Thread::switch_context(ping, ThreadMain);
+        CPU::switch_context(ping, ContextMain);
     }
 
     static void func_pong(char * arg)
@@ -74,23 +60,21 @@ private:
 
         for (i = 0; i < ITERATIONS; i++)
         {
-            std::cout << arg << i << "\n" ;
-            Thread::switch_context(pong, ping);
+            std::cout << (char *) arg << i << "\n" ;
+            CPU::switch_context(pong, ping) ;
         }
-        std::cout << arg << ": fim\n";
+        std::cout << (char *) arg << ": fim\n";
 
-        Thread::switch_context(pong, ThreadMain);
+        CPU::switch_context(pong, ContextMain);
     }
 
     private:
-        static Thread *ThreadMain;
-        static Thread *ping;
-        static Thread *pong;
-        static CPU::Context *mainContext;
+        static CPU::Context *ContextMain;
+        static CPU::Context *ping;
+        static CPU::Context *pong;
 
-        std::string main_name;
-        std::string ping_name;
-        std::string pong_name;
+        static std::string ping_name;
+        static std::string pong_name;
 };
 
 __END_API

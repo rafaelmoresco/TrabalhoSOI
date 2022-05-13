@@ -1,6 +1,6 @@
 #ifndef debug_h
 #define debug_h
-
+ 
 #include <iostream>
 #include "traits.h"
 
@@ -16,7 +16,7 @@ public:
     struct Err {};
 
     Debug & operator<<(const Begl & begl) { return *this; }
-
+ 
     Debug & operator<<(const Err & err) { _error = true; return *this; }
 private:
     volatile bool _error;

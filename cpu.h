@@ -4,6 +4,7 @@
 #include <ucontext.h>
 #include <iostream>
 #include "traits.h"
+#include "debug.h"
 
 __BEGIN_API
 
@@ -16,14 +17,18 @@ class CPU
         private:
             static const unsigned int STACK_SIZE = Traits<CPU>::STACK_SIZE;
         public:
-            Context() { _stack = 0; }
+            Context() {
+                db<CPU>(TRC)<<"CPU::Context::Context() foi chamada\n";
+                _stack = 0; 
+            }
 
             template<typename ... Tn>
             // Construtor do contexto 
             Context(void (* func)(Tn ...), Tn ... an){
+                db<CPU>(TRC)<<"CPU::Context::Context(void (* func)(Tn ...), Tn ... an)\n";
                 getcontext(&_context);
                 _stack = new char[STACK_SIZE]; // alocação da pilha
-                
+
                 if(_stack) {
                     _context.uc_stack.ss_sp = &_stack; // ponteiro para o topo da pilha
                     _context.uc_stack.ss_size = STACK_SIZE; // tamanho da pilha
@@ -32,7 +37,7 @@ class CPU
                 } else {
                     std::cout << "Failed to make stack\n";
                 }
-
+    
                 // 3º parametro é um inteiro que representa o número de argumentos
                 // 4º parametro "..." representa os argumentos que podem receber qualquer número
                 makecontext(&_context, (void(*)())func, sizeof ...(an), an...);
