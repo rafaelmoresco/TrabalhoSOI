@@ -7,14 +7,14 @@ void CPU::Context::save()
 {
     db<CPU>(TRC)<<"CPU::Context::save()\n";
     // Salva o contexto atual no ponteiro recebido como parâmetro
-    setcontext(&_context);
+    getcontext(&_context);
 }
 
 void CPU::Context::load()
 {
     db<CPU>(TRC)<<"CPU::Context::load()\n";
     //Restaura o contexto salvo previamente no ponteiro recebido como parâmetro.
-    getcontext(&_context);
+    setcontext(&_context);
 }
 
 CPU::Context::~Context()
