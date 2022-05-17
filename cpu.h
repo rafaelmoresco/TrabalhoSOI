@@ -40,7 +40,7 @@ class CPU
     
                 // 3º parametro é um inteiro que representa o número de argumentos
                 // 4º parametro "..." representa os argumentos que podem receber qualquer número
-                makecontext(&_context, (void(*)())func, sizeof ...(an), an...);
+                makecontext(&_context, (void(*)())func, sizeof ...(Tn), an...);
             }
 
             ~Context();
