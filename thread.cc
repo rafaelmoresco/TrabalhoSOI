@@ -18,7 +18,7 @@ __BEGIN_API
         db<Thread>(TRC)<<"Thread::switch_context()\n";
         try {
             _running = next;
-			CPU::switch_context(prev->_context, next->_context);
+  	    CPU::switch_context(prev->_context, next->_context);
             //Thread::setRunning(next);
         } catch (...) {
             return -1;
