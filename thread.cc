@@ -6,7 +6,7 @@
 
 __BEGIN_API
     Thread * Thread::_running = nullptr;
-    static unsigned int Thread::_thread_counter = 0;
+    unsigned int Thread::_thread_counter = 0;
 
     /*
      * MÃ©todo para trocar o contexto entre duas thread, a anterior (prev)
