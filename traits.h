@@ -14,17 +14,33 @@ class CPU;
 class Debug;
 class Thread;
 class System;
+class Lists;
 
 //declaração da classe Traits
 template<typename T>
 struct Traits {
-	static const bool debugged = false;
+	static const bool debugged = true;
+};
+
+template<> struct Traits<System> 
+{
+    static const bool debugged = true;
+};
+
+template<> struct Traits<Lists> 
+{
+    static const bool debugged = true;
+};
+
+template<> struct Traits<Thread> : public Traits<void>
+{
+    static const bool debugged = true;
 };
 
 template<> struct Traits<CPU>
 {
-    static const unsigned int STACK_SIZE = 4096;
-	static const bool debugged = false;
+    static const unsigned int STACK_SIZE = 8192;
+	static const bool debugged = true;
 };
 
 template<> struct Traits<Debug>: public Traits<void>
