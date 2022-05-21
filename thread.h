@@ -79,7 +79,6 @@ public:
      */ 
     static void init(void (*main)(void *));
 
-
     /*
      * Devolve o processador para a thread dispatcher que irá escolher outra thread pronta
      * para ser executada.
@@ -87,17 +86,53 @@ public:
     static void yield(); 
 
     /*
+     * Qualquer outro método que você achar necessário para a solução.
+     */ 
+
+    /*
      * Devolve o contexto da thread para a CPU.
     */
     Context * volatile context(); 
+
+    /*
+     * Define um novo estado para a thread.
+     */ 
+    void set_state(State state);
+
+    /*
+     * Devolve o estado da thread.
+    */
+    State state();
+
+    /*
+     * Adiciona thread na fila de prontos.
+    */
+    static void enqueue(Thread * thread, Ready_Queue & queue);
+
+    /*
+     * Remove thread na fila de prontos.
+    */
+    static void dequeue(Thread * thread, Ready_Queue & queue);
+
+    /*
+     * Devolve o elemento da fila.
+    */
+    Ready_Queue::Element * link();
+
+    /*
+     * Atualiza prioridade com timestamp.
+    */
+    void update_priority();
+
+    /*
+    * Escolhe a thread mais antiga diferente da main
+    */
+    static Thread * next();
+
     /*
      * Destrutor de uma thread. Realiza todo os procedimentos para manter a consistência da classe.
      */ 
     ~Thread();
-
-    /*
-     * Qualquer outro método que você achar necessário para a solução.
-     */ 
 
 private:
     int _id;
@@ -115,16 +150,17 @@ private:
      * Qualquer outro atributo que você achar necessário para a solução.
      */ 
     static unsigned int _thread_counter;
-
 };
 
 template<typename ... Tn>
-inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : /* inicialização de _link */
-{
+inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) { /* inicialização de _link */
     db<Thread>(TRC)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an)\n";
     _id = _thread_counter;
     _thread_counter++;
     _context = new Context(entry, an...);
+
+    new (&_link) Ready_Queue::Element(this,(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
+    enqueue(this, _ready);
 
     db<Thread>(INF)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an): Contador de threads: = " << _thread_counter << "\n";
     db<Thread>(TRC)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an): Thread " << _id << " criada\n";
