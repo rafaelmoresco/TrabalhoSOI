@@ -89,7 +89,6 @@ __BEGIN_API
 		db<Thread>(TRC)<<"Thread::update_priority()\n";
 
 		int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
-		// ISSO REALMENTE TÁ FUNCIONANDO?? KKKKK?????
 		link()->rank(now);
 		db<Thread>(TRC)<<"Thread::update_priority: Thread " << id() << " prioridade atualizada para " << now << "\n";
     }
@@ -149,9 +148,11 @@ __BEGIN_API
 
             dequeue(next_thread, _ready);
             enqueue(&_dispatcher, _ready);
+            _dispatcher.set_state(READY);
             switch_context(prev_thread, next_thread);
         }
-
+        _dispatcher.set_state(FINISHING);
+        dequeue(&_dispatcher, _ready);
         switch_context(&_dispatcher, &_main);
     }
 
@@ -175,10 +176,7 @@ __BEGIN_API
         set_state(FINISHING);
 
         Thread::_thread_counter--;
-        // ISSO AQUI FAZ SENTIDO???
         Thread::yield();
-
-        delete Thread::_context;
     }
 
     /*
