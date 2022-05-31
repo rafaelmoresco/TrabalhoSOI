@@ -158,9 +158,10 @@ inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) { /* inicialização de
     _id = _thread_counter;
     _thread_counter++;
     _context = new Context(entry, an...);
-
+    _state = READY;
     new (&_link) Ready_Queue::Element(this,(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
-    enqueue(this, _ready);
+    if (_id != 0 && _id != 1)
+        enqueue(this, _ready);
 
     db<Thread>(INF)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an): Contador de threads: = " << _thread_counter << "\n";
     db<Thread>(TRC)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an): Thread " << _id << " criada\n";
