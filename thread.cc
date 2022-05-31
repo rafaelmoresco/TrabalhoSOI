@@ -29,7 +29,7 @@ __BEGIN_API
 		
 		dequeue(&_main, _ready);
 		_running = &_main;
-
+        _main.set_state(RUNNING);
         new (&_dispatcher) Thread(dispatcher); 
         db<Thread>(TRC) << "Thread::init: Dispatcher thread foi criada\n";	
 
@@ -48,6 +48,7 @@ __BEGIN_API
             db<Thread>(ERR)<< "Thread::switch_context: proxima Thread falhou\n";
             return -1;
         }
+        prev->set_state(READY);
         next->set_state(RUNNING);
         _running = next;
         CPU::switch_context(prev->_context, next->_context);
@@ -142,7 +143,7 @@ __BEGIN_API
      */
 	void Thread::dispatcher(){
         db<Thread>(TRC)<<"Thread::dispatcher()\n";
-		while(_ready.size() > 0) { //enquanto existir thread do usuário:
+		while(_ready.size() > 1) { //enquanto existir thread do usuário:
             Thread *next_thread = next(); //escolha uma próxima thread a ser executada
             Thread *prev_thread = _running;
 
