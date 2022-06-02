@@ -22,15 +22,14 @@ __BEGIN_API
 		new (&_main_context) Context();
 		db<Thread>(TRC) << "Thread::init: Main context criado\n";
 	
-		std::string name;
-		name = "main";
-		new (&_main) Thread(main,(void *)name.data());
+        new (&_main) Thread(main, (void *) "main"); 
 		db<Thread>(TRC) << "Thread::init: Main thread criada\n";
 		
 		dequeue(&_main, _ready);
 		_running = &_main;
-        _main.set_state(RUNNING);
-        new (&_dispatcher) Thread(dispatcher); 
+
+        new (&_dispatcher) Thread((void (*) (void *)) &Thread::dispatcher, (void *) NULL);
+
         db<Thread>(TRC) << "Thread::init: Dispatcher thread foi criada\n";	
 
 		CPU::switch_context(&_main_context, _main.context());
@@ -44,15 +43,12 @@ __BEGIN_API
      */ 
     int Thread::switch_context(Thread * prev, Thread * next) {
         db<Thread>(TRC)<<"Thread::switch_context()\n";
-        if(next == 0){
-            db<Thread>(ERR)<< "Thread::switch_context: proxima Thread falhou\n";
-            return -1;
-        }
-        prev->set_state(READY);
-        next->set_state(RUNNING);
-        _running = next;
-        CPU::switch_context(prev->_context, next->_context);
+        if (prev != next) {
+            _running = next;
+            next->set_state(RUNNING);
 
+            CPU::switch_context(prev->_context, next->_context);
+        }
         return 0;
     }
 
@@ -143,9 +139,11 @@ __BEGIN_API
      */
 	void Thread::dispatcher(){
         db<Thread>(TRC)<<"Thread::dispatcher()\n";
-		while(_ready.size() > 1) { //enquanto existir thread do usuário:
+        while(!_ready.empty() && _ready.head()->object() != &_dispatcher) {
+
             Thread *next_thread = next(); //escolha uma próxima thread a ser executada
             Thread *prev_thread = _running;
+            _dispatcher.set_state(READY);
 
             dequeue(next_thread, _ready);
             enqueue(&_dispatcher, _ready);
@@ -208,7 +206,7 @@ __BEGIN_API
      */ 
 	Thread::~Thread(){
 		db<Thread>(TRC) << "Thread~Thread()\n";
+        _ready.remove(this);
 		delete _context;
-		_context = 0;	
 	}
 __END_API
