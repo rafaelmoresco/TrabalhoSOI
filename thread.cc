@@ -212,6 +212,7 @@ __BEGIN_API
      * Espera a thread acabar.
      */ 
     int Thread::join() {
+        db<Thread>(TRC)<<"Thread::join()\n";
         _wait = _running;
         _running->suspend();
         return (this->_exit_code);
@@ -222,11 +223,14 @@ __BEGIN_API
      * Faz a thread voltar a atividade.
      */ 
     void Thread::resume() {
-        this->set_state(READY);
+        db<Thread>(TRC)<<"Thread::resume()\n";
         dequeue(this, _suspend);
+        this->set_state(RUNNING);
+        switch_context(_running, this);
     }
 
     void Thread::suspend() {
+        db<Thread>(TRC)<<"Thread::suspend()\n";
         _running->set_state(SUSPENDED);
         enqueue(_running, _suspend);    
         _running->yield();
