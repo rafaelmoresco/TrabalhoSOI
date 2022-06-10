@@ -6,11 +6,13 @@
 
 __BEGIN_API
     Thread * Thread::_running = nullptr;
+    //Thread * Thread::_wait = nullptr;
     unsigned int Thread::_thread_counter = 0;
     Thread Thread::_main; 
     CPU::Context Thread::_main_context; 
     Thread Thread::_dispatcher;
-    Thread::Ready_Queue Thread::_ready;
+    Thread::System_Queue Thread::_ready;
+    Thread::System_Queue Thread::_suspend;
 
     /*
      * Realiza a inicialização da class Thread.
@@ -68,6 +70,9 @@ __BEGIN_API
             case 2:
                 db<Thread>(TRC)<<"FINISHING\n";
                 break;
+            case 3:
+                db<Thread>(TRC)<<"SUSPENDED\n";
+                break;
         }
         _state = state;
     }
@@ -75,7 +80,7 @@ __BEGIN_API
     /*
      * Devolve o elemento da fila.
     */
-    Thread::Ready_Queue::Element* Thread::link(){
+    Thread::System_Queue::Element* Thread::link(){
         return &_link;
     }
 
@@ -93,7 +98,7 @@ __BEGIN_API
     /*
      * Adiciona thread na fila de prontos.
     */
-    void Thread::enqueue(Thread * thread,Thread::Ready_Queue &queue){
+    void Thread::enqueue(Thread * thread,Thread::System_Queue &queue){
 	    db<Thread>(TRC)<<"Thread::enqueue(Thread * thread,Thread::Ready_Queue &queue)\n";
 
         if(thread == 0)
@@ -110,7 +115,7 @@ __BEGIN_API
     /*
      * Remove thread na fila de prontos.
     */
-	void Thread::dequeue(Thread * thread, Thread::Ready_Queue &queue){
+	void Thread::dequeue(Thread * thread, Thread::System_Queue &queue){
 		db<Thread>(TRC)<<"Thread::dequeue(Thread * thread, Thread::Ready_Queue &queue)\n";
 		queue.remove(thread->link());
 	}
@@ -143,7 +148,6 @@ __BEGIN_API
 
             Thread *next_thread = next(); //escolha uma próxima thread a ser executada
             Thread *prev_thread = _running;
-            _dispatcher.set_state(READY);
 
             dequeue(next_thread, _ready);
             enqueue(&_dispatcher, _ready);
@@ -173,7 +177,10 @@ __BEGIN_API
     void Thread::thread_exit(int exit_code) {
         db<Thread>(TRC)<<"Thread::exit()\n";
         set_state(FINISHING);
-
+        this->_exit_code = exit_code;
+        if (_wait != NULL) {
+            _wait->resume();
+        }
         Thread::_thread_counter--;
         Thread::yield();
     }
@@ -197,8 +204,32 @@ __BEGIN_API
     /*
      * Devolve o estado da thread.
     */
-    Thread::State Thread::state(){
+    Thread::State Thread::state() {
         return _state;
+    }
+
+    /*
+     * Espera a thread acabar.
+     */ 
+    int Thread::join() {
+        _wait = _running;
+        _running->suspend();
+        return (this->_exit_code);
+
+    }
+
+    /*
+     * Faz a thread voltar a atividade.
+     */ 
+    void Thread::resume() {
+        this->set_state(READY);
+        dequeue(this, _suspend);
+    }
+
+    void Thread::suspend() {
+        _running->set_state(SUSPENDED);
+        enqueue(_running, _suspend);    
+        _running->yield();
     }
 
     /*

@@ -16,13 +16,14 @@ protected:
     typedef CPU::Context Context;
 public:
 
-    typedef Ordered_List<Thread> Ready_Queue;
+    typedef Ordered_List<Thread> System_Queue;
 
     // Thread State
     enum State {
         RUNNING,
         READY,
-        FINISHING
+        FINISHING,
+        SUSPENDED
     };
 
     /*
@@ -65,7 +66,6 @@ public:
     int id();
 
     /*
-     * NOVO MÉTODO DESTE TRABALHO.
      * Daspachante (disptacher) de threads. 
      * Executa enquanto houverem threads do usuário.
      * Chama o escalonador para definir a próxima tarefa a ser executada.
@@ -73,7 +73,6 @@ public:
     static void dispatcher(); 
 
     /*
-     * NOVO MÉTODO DESTE TRABALHO.
      * Realiza a inicialização da class Thread.
      * Cria as Threads main e dispatcher.
      */ 
@@ -87,7 +86,23 @@ public:
 
     /*
      * Qualquer outro método que você achar necessário para a solução.
+     */
+
+    /*
+     * Espera a thread esperar a próxima.
      */ 
+    int join();
+
+    /*
+     * Faz a thread voltar a atividade.
+     */ 
+    void resume();
+
+    /*
+     * Faz a thread parar.
+     */ 
+    void suspend();
+
 
     /*
      * Devolve o contexto da thread para a CPU.
@@ -107,17 +122,17 @@ public:
     /*
      * Adiciona thread na fila de prontos.
     */
-    static void enqueue(Thread * thread, Ready_Queue & queue);
+    static void enqueue(Thread * thread, System_Queue & queue);
 
     /*
      * Remove thread na fila de prontos.
     */
-    static void dequeue(Thread * thread, Ready_Queue & queue);
+    static void dequeue(Thread * thread, System_Queue & queue);
 
     /*
      * Devolve o elemento da fila.
     */
-    Ready_Queue::Element * link();
+    System_Queue::Element * link();
 
     /*
      * Atualiza prioridade com timestamp.
@@ -142,9 +157,12 @@ private:
     static Thread _main; 
     static CPU::Context _main_context;
     static Thread _dispatcher;
-    static Ready_Queue _ready;
-    Ready_Queue::Element _link;
+    static System_Queue _ready;
+    static System_Queue _suspend;
+    System_Queue::Element _link;
     volatile State _state;
+    Thread * _wait;
+    volatile int _exit_code;
 
     /*
      * Qualquer outro atributo que você achar necessário para a solução.
@@ -159,7 +177,7 @@ inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) { /* inicialização de
     _thread_counter++;
     _context = new Context(entry, an...);
 
-    new (&_link) Ready_Queue::Element(this,(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
+    new (&_link) System_Queue::Element(this,(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
     enqueue(this, _ready);
 
     db<Thread>(INF)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an): Contador de threads: = " << _thread_counter << "\n";
