@@ -161,6 +161,7 @@ private:
     static System_Queue _suspend;
     System_Queue::Element _link;
     volatile State _state;
+    Thread * _joined;
     Thread * _wait;
     volatile int _exit_code;
 

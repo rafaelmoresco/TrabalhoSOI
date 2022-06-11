@@ -99,7 +99,7 @@ __BEGIN_API
      * Adiciona thread na fila de prontos.
     */
     void Thread::enqueue(Thread * thread,Thread::System_Queue &queue){
-	    db<Thread>(TRC)<<"Thread::enqueue(Thread * thread,Thread::Ready_Queue &queue)\n";
+	    db<Thread>(TRC)<<"Thread::enqueue(Thread * thread,Thread::System_Queue &queue)\n";
 
         if(thread == 0)
             return;
@@ -110,14 +110,31 @@ __BEGIN_API
             thread->update_priority();
             queue.insert(thread->link());
         }
+
+        db<Thread>(TRC)<<"Thread::insert_queue: Thread " << thread->id() << " inserida na fila ";
+        if(&queue == &_ready){
+            db<Thread>(TRC)<<" _ready\n";
+            thread->set_state(READY);
+        }
+        else if (&queue == &_suspend){
+            db<Thread>(TRC)<<" _suspend\n";
+            thread->set_state(SUSPENDED);
+        }
     }
 
     /*
      * Remove thread na fila de prontos.
     */
 	void Thread::dequeue(Thread * thread, Thread::System_Queue &queue){
-		db<Thread>(TRC)<<"Thread::dequeue(Thread * thread, Thread::Ready_Queue &queue)\n";
+		db<Thread>(TRC)<<"Thread::dequeue(Thread * thread, Thread::System_Queue &queue)\n";
 		queue.remove(thread->link());
+
+		db<Thread>(TRC)<<"Thread::remove_queue: Thread " << thread->id() << " removida da fila ";
+		if(&queue == &_ready){
+			db<Thread>(TRC)<<" _ready\n";
+		}else if (&queue == &_suspend){
+			db<Thread>(TRC)<<" _suspend\n";
+		}
 	}
 
     /*
@@ -178,11 +195,12 @@ __BEGIN_API
         db<Thread>(TRC)<<"Thread::exit()\n";
         set_state(FINISHING);
         this->_exit_code = exit_code;
-        if (_wait != NULL) {
-            _wait->resume();
-        }
         Thread::_thread_counter--;
-        Thread::yield();
+
+        if(_joined != NULL)
+            _joined->resume();
+        else
+            Thread::yield();
     }
 
     /*
@@ -213,6 +231,16 @@ __BEGIN_API
      */ 
     int Thread::join() {
         db<Thread>(TRC)<<"Thread::join()\n";
+		if(this == _running){
+			db<Thread>(ERR)<<"Thread::join(): Thread " << this->id() << " tentou realizar join() em si mesma.\n";
+			return -1;
+        }
+
+		if(this->_joined != 0){
+			db<Thread>(ERR)<<"Thread::join(): Thread " << this->id() << " recebeu join() de outra thread.\n";
+			return -1;
+        }
+
         _wait = _running;
         _running->suspend();
         return (this->_exit_code);
@@ -225,12 +253,13 @@ __BEGIN_API
     void Thread::resume() {
         db<Thread>(TRC)<<"Thread::resume()\n";
         dequeue(this, _suspend);
-        this->set_state(RUNNING);
+        // this->set_state(RUNNING);
         switch_context(_running, this);
     }
 
     void Thread::suspend() {
         db<Thread>(TRC)<<"Thread::suspend()\n";
+		this->_joined = _running;
         _running->set_state(SUSPENDED);
         enqueue(_running, _suspend);    
         _running->yield();
