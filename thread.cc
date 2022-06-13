@@ -199,8 +199,7 @@ __BEGIN_API
 
         if(_joined != NULL)
             _joined->resume();
-        else
-            Thread::yield();
+        Thread::yield();
     }
 
     /*
@@ -241,7 +240,6 @@ __BEGIN_API
 			return -1;
         }
 
-        _wait = _running;
         _running->suspend();
         return (this->_exit_code);
 
@@ -253,7 +251,6 @@ __BEGIN_API
     void Thread::resume() {
         db<Thread>(TRC)<<"Thread::resume()\n";
         dequeue(this, _suspend);
-        // this->set_state(RUNNING);
         switch_context(_running, this);
     }
 
