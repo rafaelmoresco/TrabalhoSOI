@@ -5,8 +5,7 @@
 #include <iostream>
 
 __BEGIN_API
-    Thread * Thread::_running = nullptr;
-    //Thread * Thread::_wait = nullptr;
+    //Thread * Thread::_running = nullptr;
     unsigned int Thread::_thread_counter = 0;
     Thread Thread::_main; 
     CPU::Context Thread::_main_context; 
@@ -197,8 +196,10 @@ __BEGIN_API
         this->_exit_code = exit_code;
         Thread::_thread_counter--;
 
-        if(_joined != NULL)
-            _joined->resume();
+        if(this->_joined != 0) {
+            this->_joined.resume();
+            this->_joined = 0;
+        }
         Thread::yield();
     }
 
@@ -230,16 +231,18 @@ __BEGIN_API
      */ 
     int Thread::join() {
         db<Thread>(TRC)<<"Thread::join()\n";
-		if(this == _running){
+		if(this == _running) {
 			db<Thread>(ERR)<<"Thread::join(): Thread " << this->id() << " tentou realizar join() em si mesma.\n";
 			return -1;
         }
 
-		if(this->_joined != 0){
+		if(this->_joined != 0) {
 			db<Thread>(ERR)<<"Thread::join(): Thread " << this->id() << " recebeu join() de outra thread.\n";
 			return -1;
         }
-
+        if(this->state() == FINISHING) {
+            return (this->_exit_code);
+        }
         _running->suspend();
         return (this->_exit_code);
 
