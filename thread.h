@@ -174,6 +174,7 @@ template<typename ... Tn>
 inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) { /* inicialização de _link */
     db<Thread>(TRC)<<"Thread::Thread(void (* entry)(Tn ...), Tn ... an)\n";
     _id = _thread_counter;
+    _joined = 0;
     _thread_counter++;
     _context = new Context(entry, an...);
 
