@@ -120,6 +120,10 @@ __BEGIN_API
             db<Thread>(TRC)<<" _suspend\n";
             thread->set_state(SUSPENDED);
         }
+        else{
+            db<Thread>(TRC)<<" _sleeping\n";
+            thread->set_state(WAITING);
+        }
     }
 
     /*
@@ -130,11 +134,12 @@ __BEGIN_API
 		queue.remove(thread->link());
 
 		db<Thread>(TRC)<<"Thread::remove_queue: Thread " << thread->id() << " removida da fila ";
-		if(&queue == &_ready){
+		if(&queue == &_ready)
 			db<Thread>(TRC)<<" _ready\n";
-		}else if (&queue == &_suspend){
+		else if (&queue == &_suspend)
 			db<Thread>(TRC)<<" _suspend\n";
-		}
+        else
+			db<Thread>(TRC)<<" _sleeping\n";
 	}
 
     /*
@@ -167,6 +172,8 @@ __BEGIN_API
             Thread *prev_thread = _running;
 
             dequeue(next_thread, _ready);
+            Thread::_thread_counter--;
+
             enqueue(&_dispatcher, _ready);
             _dispatcher.set_state(READY);
             switch_context(prev_thread, next_thread);
@@ -195,7 +202,6 @@ __BEGIN_API
         db<Thread>(TRC)<<"Thread::exit()\n";
         set_state(FINISHING);
         this->_exit_code = exit_code;
-        Thread::_thread_counter--;
 
         if(_joined != NULL)
             _joined->resume();
@@ -244,7 +250,6 @@ __BEGIN_API
         _wait = _running;
         _running->suspend();
         return (this->_exit_code);
-
     }
 
     /*
@@ -265,12 +270,52 @@ __BEGIN_API
         _running->yield();
     }
 
+//vamo dormir porra
+    void Thread::sleep(System_Queue &_sleeping){
+		db<Thread>(TRC)<<"Thread::sleep()\n";
+		enqueue(_running, _sleeping);
+		_running->_sleepOrder = &_sleeping;
+		yield();
+	}
+
+	void Thread::wakeup(System_Queue &_sleeping){
+		db<Thread>(TRC)<<"Thread::wakeup()\n";
+		if(_sleeping.size() != 0){
+			Thread * thread = _sleeping.head()->object();
+			Thread * prev = _running;
+
+			dequeue(thread, _sleeping);
+			enqueue(prev, _ready);
+			
+			thread->_sleepOrder = 0;
+
+			switch_context(prev,thread);
+		}
+	}
+
+	void Thread::wakeup_all(System_Queue &_sleeping){
+		db<Thread>(TRC) << "Thread::wakeup_all()\n";
+		Thread * thread = 0;
+		while(_sleeping.size() > 0){
+			thread = _sleeping.tail()->object();
+			dequeue(thread, _sleeping);
+			thread->set_state(READY);
+			thread->_sleepOrder = 0;
+			_ready.insert_head(thread->link());
+		}
+		yield();
+	}
+
     /*
      * Destrutor de uma thread.
      */ 
 	Thread::~Thread(){
 		db<Thread>(TRC) << "Thread~Thread()\n";
         _ready.remove(this);
+
+		if(_sleepOrder != 0){
+			dequeue(this, *this->_sleepOrder);
+		}
 		delete _context;
 	}
 __END_API

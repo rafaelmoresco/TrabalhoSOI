@@ -23,7 +23,8 @@ public:
         RUNNING,
         READY,
         FINISHING,
-        SUSPENDED
+        SUSPENDED,
+        WAITING
     };
 
     /*
@@ -51,7 +52,7 @@ public:
      * Deve encapsular a chamada para a troca de contexto realizada pela class CPU.
      * Valor de retorno é negativo se houve erro, ou zero.
      */ 
-    static int switch_context(Thread * prev, Thread * next);
+    static int switch_context(Thread *prev, Thread *next);
 
     /*
      * Termina a thread.
@@ -122,12 +123,12 @@ public:
     /*
      * Adiciona thread na fila de prontos.
     */
-    static void enqueue(Thread * thread, System_Queue & queue);
+    static void enqueue(Thread * thread, System_Queue &queue);
 
     /*
      * Remove thread na fila de prontos.
     */
-    static void dequeue(Thread * thread, System_Queue & queue);
+    static void dequeue(Thread * thread, System_Queue &queue);
 
     /*
      * Devolve o elemento da fila.
@@ -144,6 +145,12 @@ public:
     */
     static Thread * next();
 
+    static void sleep(System_Queue &_sleeping);
+
+    static void wakeup(System_Queue &_sleeping);
+
+    static void wakeup_all(System_Queue &_sleeping);
+
     /*
      * Destrutor de uma thread. Realiza todo os procedimentos para manter a consistência da classe.
      */ 
@@ -159,6 +166,7 @@ private:
     static Thread _dispatcher;
     static System_Queue _ready;
     static System_Queue _suspend;
+    System_Queue *_sleepOrder;
     System_Queue::Element _link;
     volatile State _state;
     Thread * _joined;
