@@ -249,7 +249,7 @@ __BEGIN_API
         if(this->state() == FINISHING) {
             return (this->_exit_code);
         }
-        _running->suspend();
+        suspend();
         return (this->_exit_code);
     }
 
