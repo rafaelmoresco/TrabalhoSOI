@@ -55,7 +55,7 @@ class CPU
         };
 
     public:
-
+        static int xadd(volatile int &number, int add);
         static void switch_context(Context *from, Context *to);
 
 };

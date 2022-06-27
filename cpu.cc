@@ -34,4 +34,10 @@ void CPU::switch_context(Context *from, Context *to)
     swapcontext(&from->_context, &to->_context);	
 }
 
+int CPU::xadd(volatile int & number, int add){
+	int val = add;
+	__asm__ __volatile__("lock xadd %0, %2":"=a"(val):"a"(val),"m"(number) : "memory");
+	return val;
+}
+
 __END_API
