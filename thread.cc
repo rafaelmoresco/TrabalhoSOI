@@ -5,7 +5,7 @@
 #include <iostream>
 
 __BEGIN_API
-    //Thread * Thread::_running = nullptr;
+    Thread * Thread::_running = nullptr;
     unsigned int Thread::_thread_counter = 0;
     Thread Thread::_main; 
     CPU::Context Thread::_main_context; 
@@ -171,7 +171,6 @@ __BEGIN_API
             Thread *prev_thread = _running;
 
             dequeue(next_thread, _ready);
-            Thread::_thread_counter--;
 
             enqueue(&_dispatcher, _ready);
             _dispatcher.set_state(READY);
@@ -201,9 +200,10 @@ __BEGIN_API
         db<Thread>(TRC)<<"Thread::exit()\n";
         set_state(FINISHING);
         this->_exit_code = exit_code;
+        Thread::_thread_counter--;
 
         if(this->_joined != 0) {
-            this->_joined.resume();
+            this->_joined->resume();
             this->_joined = 0;
         }
         Thread::yield();
