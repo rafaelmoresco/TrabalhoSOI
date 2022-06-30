@@ -171,6 +171,7 @@ __BEGIN_API
             Thread *prev_thread = _running;
 
             dequeue(next_thread, _ready);
+            Thread::_thread_counter--;
 
             enqueue(&_dispatcher, _ready);
             _dispatcher.set_state(READY);
@@ -200,7 +201,6 @@ __BEGIN_API
         db<Thread>(TRC)<<"Thread::exit()\n";
         set_state(FINISHING);
         this->_exit_code = exit_code;
-        Thread::_thread_counter--;
 
         if(this->_joined != 0) {
             this->_joined->resume();
