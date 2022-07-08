@@ -1,22 +1,26 @@
-CC := g++
-CFLAGS := -Wall -g
-TARGET := main
+IDIR =.
+CC=g++
+LDLIBS =  -lsfml-graphics -lsfml-window -lsfml-system -lm  -lpng
+CFLAGS=-I$(IDIR) -g -Wextra
 
-SRCS := $(wildcard *.cc)
-OBJS := $(patsubst %.cc,%.o,$(SRCS))
+LDFLAGS= $(CFLAGS)
 
-o: $(TARGET)
-$(TARGET): $(OBJS)
-	$(CC) -o $@ $^
-c: $(TARGET)
-	$(CC) $(CFLAGS) -c $<
+ODIR=.
+LIBS= $(LDLIBS) $(LDFLAGS)
+
+_DEPS = window.h
+DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+
+_OBJ = main.o window.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+$(ODIR)/%.o: %.c $(DEPS)
+	$(CC) -std=c++14 -c -o $@ $< $(CFLAGS) -Wextra
+
+main: $(OBJ)
+	$(CC) -std=c++14 -o $@ $^ $(CFLAGS) $(LIBS)
+
+.PHONY: clean
+
 clean:
-	rm -rf $(TARGET) *.o
-	
-.PHONY: all clean
-
-clean:
-	rm -rf $(TARGET) *.o *.out
-
-valgrind:
-	valgrind --tool=memcheck --leak-check=yes ./main
+	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 

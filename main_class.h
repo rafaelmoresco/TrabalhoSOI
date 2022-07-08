@@ -1,118 +1,91 @@
 #ifndef main_class_h
 #define main_class_h
 
-#include <iostream>
-#include "cpu.h"
-#include "traits.h"
-#include "thread.h"
-#include "semaphore.h"
+#include "window.h"
+#include "pacman.h"
+#include "ghost.h"
+#include "game.h"
+#include "os/cpu.h"
+#include "os/traits.h"
+#include "os/thread.h"
+#include "os/semaphore.h"
 
 __BEGIN_API
 
 class Main
 {
 public:
-    Main() {
-    }
+	Main() {
+	}
 
-    static const int WORKLOAD = 20000;
+	static void run(void * name){
+		pacman = new Pacman(PACMAN);
+		blinky = new Ghost(BLINKY);
+		pinky = new Ghost(PINKY);
+		inky = new Ghost(INKY);
+		clyde = new Ghost(CLYDE);
+		game = new Game(pacman, blinky, pinky, inky, clyde);
 
-    static int do_work(int n){
-        int i, j, soma;
+		window_thread = new Thread(printscreen);
+		game_thread = new Thread(run_game);
+		pacman_thread = new Thread(char_pacman);
+		blinky_thread = new Thread(ghost_blinky);
+		pinky_thread = new Thread(ghost_pinky);
+		inky_thread = new Thread(ghost_inky);
+		clyde_thread = new Thread(ghost_clyde);
 
-        soma = 0 ;
-        for (i = 0; i < n; i++)
-            for (j = 0; j < n; j++)
-                soma += j * i;
-        return soma;
-    }
+		int wt;
+		wt = window_thread->join();
 
-    static void run(void * name) {
-        std::cout << (char *) name << ": inicio\n";
+		delete window_thread;
+		delete pacman_thread;
+		delete blinky_thread;
+		delete pinky_thread;
+		delete inky_thread;
+		delete clyde_thread;
+		delete game_thread;
 
-        std::string pang_name = "   Pang";
-        std::string peng_name = "       Peng";
-        std::string ping_name = "           Ping";
-        std::string pong_name = "               Pong";
-        std::string pung_name = "                   Pung";
-
-        ping_pong_threads[0] = new Thread(body, (char *) pang_name.data(), 0);
-        ping_pong_threads[1] = new Thread(body, (char *) peng_name.data(), 1);
-        ping_pong_threads[2] = new Thread(body, (char *) ping_name.data(), 2);
-        ping_pong_threads[3] = new Thread(body, (char *) pong_name.data(), 3);
-        ping_pong_threads[4] = new Thread(body, (char *) pung_name.data(), 4);
-
-        sem = new Semaphore();
-
-        for (int i = 0; i < 2; i++) {
-            std::cout << "main: " << i << "\n";
-            Main::do_work(WORKLOAD);
-        }
-
-        int ec;
-        std::cout << "main: esperando Pang...\n";
-        ec = ping_pong_threads[0]->join();
-        std::cout << "main: Pang acabou com exit code " << ec << "\n";
-
-        std::cout << "main: esperando Peng...\n";
-        ec = ping_pong_threads[1]->join();
-        std::cout << "main: Peng acabou com exit code " << ec << "\n";
-
-        std::cout << "main: esperando Ping...\n";
-        ec = ping_pong_threads[2]->join();
-        std::cout << "main: Ping acabou com exit code " << ec << "\n";
-
-        std::cout << "main: esperando Pong...\n";
-        ec = ping_pong_threads[3]->join();
-        std::cout << "main: Pong acabou com exit code " << ec << "\n";
-
-        std::cout << "main: esperando Pung...\n";
-        ec = ping_pong_threads[4]->join();
-        std::cout << "main: Pung acabou com exit code " << ec << "\n";
-
-
-        std::cout << (char *) name << ": fim\n";
-        
-        delete sem;
-
-        delete ping_pong_threads[0];
-        delete ping_pong_threads[1];
-        delete ping_pong_threads[2];
-        delete ping_pong_threads[3];
-        delete ping_pong_threads[4];
-        
+		delete window;
+		delete pacman;
+		delete blinky;
+		delete pinky;
+		delete inky;
+		delete clyde;
+		delete game;
     }
 
     ~Main() {}
 
-private:
+	static void char_pacman(){
+		while(true){ //aberto
+			tm_sem->p();
+            // run
+			tm_sem->v();
+			Thread::yield();
+		}
+		pacman_thread->thread_exit(0);
+	}
 
-    static const int ITERATIONS = 10;
+	private:
+		static Thread *window_thread;
+		static Thread *pacman_thread;
+		static Thread *blinky_thread;
+		static Thread *pinky_thread;
+		static Thread *inky_thread;
+		static Thread *clyde_thread;
+		static Thread *game_thread;
+		
+		static Semaphore *tm_sem;
+		static Semaphore *gh_sem;
 
-    static void body(char *name, int id)
-    {
-        int i ;
-
-        std::cout << name << ": inicio\n";
-
-        sem->p();
-        for (i = 0; i < ITERATIONS; i++)
-        {
-            std::cout << name << ": " << i << "\n" ;
-            Thread::yield();
-        }
-        sem->v();
-        std::cout << name << ": fim\n";
-
-
-        ping_pong_threads[id]->thread_exit(id);
-    }
-
-    private:
-        static Thread *ping_pong_threads[5];
-        static Semaphore *sem;
+		static Window *window;
+		static Pacman *pacman;
+		static Ghost *blinky;  
+		static Ghost *pinky;
+		static Ghost *inky;
+		static Ghost *clyde;
+		static Game *game;
 };
-
 __END_API
 
 #endif
