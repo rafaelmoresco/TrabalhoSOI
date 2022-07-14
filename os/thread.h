@@ -151,6 +151,7 @@ public:
 
     static void wakeup_all(System_Queue &_sleeping);
 
+    static void reschedule();
     /*
      * Destrutor de uma thread. Realiza todo os procedimentos para manter a consistência da classe.
      */ 
@@ -171,7 +172,6 @@ private:
     volatile State _state;
     Thread * _joined;
     volatile int _exit_code;
-
     /*
      * Qualquer outro atributo que você achar necessário para a solução.
      */ 

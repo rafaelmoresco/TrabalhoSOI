@@ -12,7 +12,6 @@ __BEGIN_API
     Thread Thread::_dispatcher;
     Thread::System_Queue Thread::_ready;
     Thread::System_Queue Thread::_suspend;
-
     /*
      * Realiza a inicialização da class Thread.
      * Cria as Threads main e dispatcher.
@@ -199,6 +198,7 @@ __BEGIN_API
      */  
     void Thread::thread_exit(int exit_code) {
         db<Thread>(TRC)<<"Thread::exit()\n";
+
         set_state(FINISHING);
         this->_exit_code = exit_code;
 
@@ -273,6 +273,7 @@ __BEGIN_API
 //vamo dormir porra
     void Thread::sleep(System_Queue &_sleeping){
 		db<Thread>(TRC)<<"Thread::sleep()\n";
+
 		enqueue(_running, _sleeping);
 		_running->_sleepOrder = &_sleeping;
 		yield();
@@ -311,6 +312,7 @@ __BEGIN_API
      */ 
 	Thread::~Thread(){
 		db<Thread>(TRC) << "Thread~Thread()\n";
+
         _ready.remove(this);
 
 		if(_sleepOrder != 0){

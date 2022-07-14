@@ -39,7 +39,7 @@ template<> struct Traits<Thread> : public Traits<void>
 
 template<> struct Traits<CPU>
 {
-    static const unsigned int STACK_SIZE = 8192;
+    static const unsigned int STACK_SIZE = 64512;
 	static const bool debugged = true;
 };
 
