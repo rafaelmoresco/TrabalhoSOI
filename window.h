@@ -4,21 +4,54 @@
 #include <iostream>
 #include <png.h>
 #include <SFML/Graphics.hpp>
+#include <cmath>
+#include "enum.h"
+#include "keyinput.h"
+#include "interface.h"
+#include "game.h"
+#include<unistd.h>
 
 class Window
 {
 public:
     Window();
-
-    void run();
-
+    void KeyboardInput();
+		void draw_maze();
+		void draw_pacman();
+		void draw_ghost(CharName name);
+		void draw_scores();
+		void set_game(Game *game);
+    bool run(); 
     void draw_texture(unsigned int texture, int length, int height, float angle);
+		void start();
+		void dead(int i);
+		void win();
+		void finish();
 
 private:
     void load_and_bind_textures();
 
+		Game *_game;
 
-private:
+    KeyInput _key;
+		static sf::Event event;
+		sf::RenderWindow _window;
+		sf::View _view;
+
+		Interface _interface;
+		int pacsprite;
+		int ghostsprite;
+
+		sf::Sprite pacman[3][4];
+    sf::Sprite eyes[4];
+    sf::Sprite ghosts[4][2];
+		sf::Sprite numbers[10];
+
+    sf::Sprite frightened_b[2];
+    sf::Sprite frightened_w[2];
+    sf::Sprite dying[11];
+
+		//TEXTURES
 
     // Maze Textures
     sf::Texture maze_tex;
@@ -30,91 +63,54 @@ private:
 
     // Pacman Textures
     sf::Texture pac_0_tex;
-    sf::Sprite pac_0_sprite;
-    sf::Texture pac_1_tex;
-    sf::Sprite pac_1_sprite;
-    sf::Texture pac_2_tex;
-    sf::Sprite pac_2_sprite;
+		sf::Texture pac_1_tex;
+		sf::Texture pac_2_tex;
+
     sf::Texture dead_0_tex;
-    sf::Sprite dead_0_sprite;
     sf::Texture dead_1_tex;
-    sf::Sprite dead_1_sprite;
     sf::Texture dead_2_tex;
-    sf::Sprite dead_2_sprite;
     sf::Texture dead_3_tex;
-    sf::Sprite dead_3_sprite;
     sf::Texture dead_4_tex;
-    sf::Sprite dead_4_sprite;
     sf::Texture dead_5_tex;
-    sf::Sprite dead_5_sprite;
     sf::Texture dead_6_tex;
-    sf::Sprite dead_6_sprite;
     sf::Texture dead_7_tex;
-    sf::Sprite dead_7_sprite;
     sf::Texture dead_8_tex;
-    sf::Sprite dead_8_sprite;
     sf::Texture dead_9_tex;
-    sf::Sprite dead_9_sprite;
     sf::Texture dead_10_tex;
-    sf::Sprite dead_10_sprite;
 
     // Ghost Textures
     sf::Texture ghost_r_0_tex;
-    sf::Sprite ghost_r_0_sprite;
     sf::Texture ghost_r_1_tex;
-    sf::Sprite ghost_r_1_sprite;
     sf::Texture ghost_p_0_tex;
-    sf::Sprite ghost_p_0_sprite;
     sf::Texture ghost_p_1_tex;
-    sf::Sprite ghost_p_1_sprite;
     sf::Texture ghost_b_0_tex;
-    sf::Sprite ghost_b_0_sprite;
     sf::Texture ghost_b_1_tex;
-    sf::Sprite ghost_b_1_sprite;
     sf::Texture ghost_y_0_tex;
-    sf::Sprite ghost_y_0_sprite;
     sf::Texture ghost_y_1_tex;
-    sf::Sprite ghost_y_1_sprite;
+
     sf::Texture ghost_scared_0_tex;
-    sf::Sprite ghost_scared_0_sprite;
     sf::Texture ghost_scared_1_tex;
-    sf::Sprite ghost_scared_1_sprite;
     sf::Texture ghost_scared_2_tex;
-    sf::Sprite ghost_scared_2_sprite;
     sf::Texture ghost_scared_3_tex;
-    sf::Sprite ghost_scared_3_sprite;
 
     // Eye Textures
     sf::Texture eye_up_tex;
-    sf::Sprite eye_up_sprite;
     sf::Texture eye_right_tex;
-    sf::Sprite eye_right_sprite;
     sf::Texture eye_down_tex;
-    sf::Sprite eye_down_sprite;
     sf::Texture eye_left_tex;
-    sf::Sprite eye_left_sprite;
 
     // UI Textures
     sf::Texture num_0_tex;
-    sf::Sprite num_0_sprite;
     sf::Texture num_1_tex;
-    sf::Sprite num_1_sprite;
     sf::Texture num_2_tex;
-    sf::Sprite num_2_sprite;
     sf::Texture num_3_tex;
-    sf::Sprite num_3_sprite;
     sf::Texture num_4_tex;
-    sf::Sprite num_4_sprite;
     sf::Texture num_5_tex;
-    sf::Sprite num_5_sprite;
     sf::Texture num_6_tex;
-    sf::Sprite num_6_sprite;
     sf::Texture num_7_tex;
-    sf::Sprite num_7_sprite;
     sf::Texture num_8_tex;
-    sf::Sprite num_8_sprite;
     sf::Texture num_9_tex;
-    sf::Sprite num_9_sprite;
+
     sf::Texture score_200_tex;
     sf::Sprite score_200_sprite;
     sf::Texture score_400_tex;

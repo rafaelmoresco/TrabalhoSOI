@@ -1,10 +1,11 @@
 #include "window.h"
+#include "os/thread.h"
+#include "os/system.h"
+#include "main_class.h"
+
+__USING_API 
 
 int main(void)
-{
-    Window window;
-
-    window.run();
-
-    return 0;
-}
+{ 
+    System::init(&Main::run); 
+} 

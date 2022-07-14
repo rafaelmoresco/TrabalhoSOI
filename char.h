@@ -2,31 +2,41 @@
 #define char_h
 
 #include "enum.h"
+#include "interface.h"
+#include <cmath> 
+#include <iostream>
 
 class Char{
     public:
         Char(CharName name);
-        void setSpeed(float percentage);
-        void setDirection(Direction direction);
-        int getX();
-        int getY();
-        float getX_px();
-        float getY_px();
-        void setX(int x);
-        void setY(int y);
-        void setX_px(float x_px);
-        void setY_px(float y_px);
-
+        void run();
+        int move();
+        void update_position(); 
+        void set_speed(float percentage);
+				void set_direction(Direction direction);
+				bool is_next_tile_available(Direction direction);
+        int get_x();
+        int get_y();
+        float get_x_px();
+        float get_y_px();
+				void set_x(int x);
+        void set_y(int y);
+        void set_x_px(float x_px);
+        void set_y_px(float y_px);
+        void set_eaten(bool eaten);
+        bool get_eaten();
     protected:
         CharName _name;
+        Interface _interface;
         int _x;
         int _y;
-        float _b_x;
-        float _b_y;
+				float _b_x;
+				float _b_y;
         int _x_px;
         int _y_px;
         Direction _direction;
         float _speed;
+        bool _eaten;
 };
 
 #endif
