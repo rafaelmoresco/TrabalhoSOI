@@ -8,7 +8,8 @@
 #include "pacman.h"
 #include "ghost.h"
 
-class Game{
+class Game
+{
 		public:
 				Game(Pacman *_pac, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde);
         void update_interface();

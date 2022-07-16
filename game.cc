@@ -1,6 +1,7 @@
 #include "game.h"
 
-Game::Game(Pacman *_pac, Ghost *_blinky, Ghost *_pinky, Ghost *_inky, Ghost *_clyde){
+Game::Game(Pacman *_pac, Ghost *_blinky, Ghost *_pinky, Ghost *_inky, Ghost *_clyde)
+{
 	_pacman = _pac;
 	_ghosts[0] = _blinky;
 	_ghosts[1] = _pinky;
@@ -8,13 +9,15 @@ Game::Game(Pacman *_pac, Ghost *_blinky, Ghost *_pinky, Ghost *_inky, Ghost *_cl
 	_ghosts[3] = _clyde;
 }
 
-void Game::update_interface(){
+void Game::update_interface()
+{
 	update_dots();
 	update_ghosts();
 	update_fruits();
 }
 
-bool Game::update_dots(){
+bool Game::update_dots()
+{
     int pacx = _pacman->get_x();
     int pacy = _pacman->get_y();
 		int i;
@@ -36,7 +39,8 @@ bool Game::update_dots(){
 	return rtn;
 }
 
-int Game::update_ghosts(){
+int Game::update_ghosts()
+{
 	int pacx, pacy, gx[4], gy[4], i, rtn = -1;
 	pacx = _pacman->get_x();
 	pacy = _pacman->get_y();
@@ -66,7 +70,8 @@ int Game::update_ghosts(){
 	return rtn;
 }
 
-void Game::update_fruits(){
+void Game::update_fruits()
+{
 	int pacx = _pacman->get_x();
 	int pacy = _pacman->get_y();
 
@@ -78,32 +83,37 @@ void Game::update_fruits(){
 	}
 }
 
-void Game::set_direction(int name,Direction direction){
+void Game::set_direction(int name,Direction direction)
+{
 	if(name == 0)
 		_pacman->set_direction(direction);
 	else
 		_ghosts[name-1]->set_direction(direction);
 }
 
-bool Game::is_win(){
+bool Game::is_win()
+{
 	if(_dot_counter == 244)
 		return true;
 	return false;
 }
 
-bool Game::is_dead(){
+bool Game::is_dead()
+{
 	if(_pacman->get_eaten())
 		return true;
 	return false;
 }
 
-bool Game::is_finish(){
+bool Game::is_finish()
+{
 	if(_interface.get_lives() == 0)
 		return true;
 	return false;
 }
 
-void Game::dead(){
+void Game::dead()
+{
 	_interface.lose_life();
 	_interface.reset_maze();
 	_pacman->reset();

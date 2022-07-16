@@ -4,7 +4,8 @@
 #include <iostream>
 #include "enum.h"
 
-class Interface{
+class Interface
+{
     public:
 		Tile get_maze(int x, int y);
 		int get_position(int x, int y);

@@ -1,6 +1,7 @@
 #include "char.h"
 
-Char::Char(CharName name){
+Char::Char(CharName name)
+{
 	_name = name;
 	_direction = LEFT;
 	set_speed(0.75);
@@ -13,7 +14,8 @@ Char::Char(CharName name){
 	_eaten = false;
 }
 
-int Char::move(){
+int Char::move()
+{
 	if(_direction == UP){
 		if(is_next_tile_available(UP))
 			_b_x -= _speed;
@@ -41,7 +43,8 @@ int Char::move(){
 	return 1;
 }
 
-void Char::update_position(){
+void Char::update_position()
+{
 	if(_x == 14 && _y_px < 6){
 		_y = 27;
 		_y_px = _y * 8 + 2;
@@ -84,14 +87,14 @@ void Char::update_position(){
 		_interface.set_position(_y,(int)_name,1);
 }
 
-void Char::set_speed(float percentage){
-	_speed = percentage*75.0 / FPS;
+void Char::set_speed(float speed)
+{
+	_speed = speed *75.0 / FPS;
 }
 
-bool Char::is_next_tile_available(Direction direction){
-	int x,y;
-	x = _x;
-	y = _y;
+bool Char::is_next_tile_available(Direction direction)
+{
+	int x = _x, y = _y;
 	if(direction == UP)
 		x--;
 	else if(direction == LEFT)
@@ -103,7 +106,8 @@ bool Char::is_next_tile_available(Direction direction){
 	return _interface.get_maze(x, y) != W && (_interface.get_maze(x, y) != G || _eaten);
 }
 
-void Char::set_direction(Direction direction){
+void Char::set_direction(Direction direction)
+{
 	if((direction == UP && is_next_tile_available(UP)) || (direction == DOWN && is_next_tile_available(DOWN))){
 		if(_y_px >= _y * 8 + 2 &&  _y_px <= _y * 8 + 6){
 			_b_y = 0.0;
@@ -122,44 +126,53 @@ void Char::set_direction(Direction direction){
 	}
 }
 
-int Char::get_x(){
+int Char::get_x()
+{
     return _x;
 }
 
-int Char::get_y(){
+int Char::get_y()
+{
     return _y;
 }
 
-float Char::get_x_px(){
+float Char::get_x_px()
+{
     return _x_px;
 }
 
-float Char::get_y_px(){
+float Char::get_y_px()
+{
     return _y_px;
 }
 
-void Char::set_x(int x){
+void Char::set_x(int x)
+{
     _x = x;
 }
 
-void Char::set_y(int y){
+void Char::set_y(int y)
+{
     _y = y;
 }
 
-void Char::set_x_px(float x_px){
+void Char::set_x_px(float x_px)
+{
     _x_px = x_px;
 }
 
-void Char::set_y_px(float y_px){
+void Char::set_y_px(float y_px)
+{
     _y_px = y_px;
 }
 
-
-void Char::set_eaten(bool eaten){
+void Char::set_eaten(bool eaten)
+{
     _eaten = eaten;
-		_interface.set_eaten(_eaten, (int)_name);
+	_interface.set_eaten(_eaten, (int)_name);
 }
 
-bool Char::get_eaten(){
+bool Char::get_eaten()
+{
     return _eaten;
 }

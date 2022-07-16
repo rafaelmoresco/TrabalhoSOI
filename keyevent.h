@@ -6,7 +6,8 @@
 #include "keyinput.h"
 #include "game.h"
 
-class KeyEvent{
+class KeyEvent
+{
 	public:
 		KeyEvent(Game *game);
 		bool handler();

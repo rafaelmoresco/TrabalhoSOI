@@ -2,14 +2,16 @@
 
 Mode Ghost::_main_mode = SCATTER;
 
-Ghost::Ghost(CharName name) : Char(name){
+Ghost::Ghost(CharName name) : Char(name)
+{
 	_mode = SCATTER;
 	_crossroad[0] = -1;
 	_crossroad[1] = -1;
 	_ghost_house = false;
 }
 
-void Ghost::set_mode(Mode mode){
+void Ghost::set_mode(Mode mode)
+{
 	if(!_eaten ){
 		if(mode == FRIGHTENED)
 			set_speed(0.5);
@@ -25,33 +27,39 @@ void Ghost::set_mode(Mode mode){
 	_interface.set_mode((int)_name,_mode);
 }
 
-void Ghost::set_main_mode(Mode mode){
+void Ghost::set_main_mode(Mode mode)
+{
 	_main_mode = mode;
 }
 
-Mode Ghost::get_mode(){
+Mode Ghost::get_mode()
+{
     return _mode;
 }
 
-void Ghost::set_eaten(bool eaten){
+void Ghost::set_eaten(bool eaten)
+{
     _eaten = eaten;
     if(_eaten == true)
         set_speed(1.4);
 	_interface.set_eaten(_eaten,(int)_name);
 }
 
-void Ghost::set_ghost_house(bool gh){
-	_ghost_house = gh;
+void Ghost::set_ghost_house(bool ghost_house)
+{
+	_ghost_house = ghost_house;
 }
 
-bool Ghost::is_in_ghost_house(){
+bool Ghost::is_in_ghost_house()
+{
 	return _ghost_house;
 }
 
-void Ghost::exit_ghost_house(){
-	if(_y_px > 13 * 8 + 4)
+void Ghost::exit_ghost_house()
+{
+	if(_y_px > 108)
 		_y_px--;
-	else if(_y_px < 13 * 8 + 4)
+	else if(_y_px < 108)
 		_y_px++;
 	else
 		_x_px--;
@@ -71,7 +79,8 @@ void Ghost::exit_ghost_house(){
 	_interface.set_position_px(_y_px, (int)_name, 1);
 }
 
-bool Ghost::crossroad(){
+bool Ghost::crossroad()
+{
 	if(_x != _crossroad[0] || _y != _crossroad[1]){
 		if(_direction == UP || _direction == DOWN){
 			if((is_direction_available(LEFT)|| is_direction_available(RIGHT)) && _x_px >= _x * 8 + 2 && _x_px <= _x * 8 + 6){
@@ -90,25 +99,26 @@ bool Ghost::crossroad(){
 	return false;
 }
 
-void Ghost::crossroad_decision(){
-	int i, directions_available = 0,dir;
+void Ghost::crossroad_decision()
+{
+	int i, directions_available = 0, direction;
 	float distance[4], dist;
-	bool dir_b[4];
+	bool available[4];
 	
-	for(i=0;i<4;i++)
-		dir_b[i] = is_direction_available((Direction)i);
+	for(i = 0; i < 4; i++)
+		available[i] = is_direction_available((Direction)i);
 	
-	for(i=0;i<4;i++){
-		if(dir_b[i]){
+	for(i = 0; i < 4; i++){
+		if(available[i]){
 			directions_available++;
-			dir = i;
+			direction = i;
 		}
 	}
 	if(directions_available > 1){
 		if(_mode == FRIGHTENED && !_eaten){
 			do{
-				dir = rand()%4;
-			}while(!dir_b[dir]);
+				direction = rand()%4;
+			}while(!available[direction]);
 		} else{
 			if(_eaten){
 				_target_tiles[0] = 14;
@@ -119,25 +129,26 @@ void Ghost::crossroad_decision(){
 				target_tiles_chase();
 			dist = 5000;
 			
-			for(i=0;i<4;i++){
+			for(i = 0; i < 4; i++){
 				distance[i] = distance_target_tiles((Direction)i);
-				if(dir_b[i] && distance[i]<dist){
+				if(available[i] && distance[i]<dist){
 					dist = distance[i];
-					dir = i;
+					direction = i;
 				}
 			}
 		}
 	}
 	char a;
-	set_direction((Direction)dir); 
+	set_direction((Direction)direction); 
 }
 
-void Ghost::target_tiles_scatter(){
+void Ghost::target_tiles_scatter()
+{
 	if(_name == BLINKY){
 		_target_tiles[0] = -2;
-		_target_tiles[1] = 24 ;
+		_target_tiles[1] = 24;
 	}else if(_name == PINKY){
-		_target_tiles[0] = -2 ;
+		_target_tiles[0] = -2;
 		_target_tiles[1] = 3;
 	}else if(_name == INKY){
 		_target_tiles[0] = 31;
@@ -148,32 +159,33 @@ void Ghost::target_tiles_scatter(){
 	}
 }
 
-void  Ghost::target_tiles_chase(){
-	Direction dir = _interface.get_direction((int)PACMAN);
+void  Ghost::target_tiles_chase()
+{
+	Direction direction = _interface.get_direction((int)PACMAN);
 	int x = _interface.get_position((int)PACMAN,0);
 	int y = _interface.get_position((int)PACMAN,1);
 	if(_name == BLINKY){
 		_target_tiles[0] = x ;
 		_target_tiles[1] = y;
 	}else if(_name == PINKY){
-		if(dir == UP)
+		if(direction == UP)
 			x -= 4;
-		else if(dir == LEFT)
+		else if(direction == LEFT)
 			y -= 4;
-		else if(dir == DOWN)
+		else if(direction == DOWN)
 			x +=4;
-		else if(dir == RIGHT)
+		else if(direction == RIGHT)
 			y += 4;
 		_target_tiles[0] = x;
 		_target_tiles[1] = y;
 	}else if(_name == INKY){
-		if(dir == UP)
+		if(direction == UP)
 			x -= 2;
-		else if(dir == LEFT)
+		else if(direction == LEFT)
 			y -= 2;
-		else if(dir == DOWN)
+		else if(direction == DOWN)
 			x += 2;
-		else if(dir == RIGHT)
+		else if(direction == RIGHT)
 			y += 2;
 		_target_tiles[0] = _interface.get_position((int)BLINKY, 0) + (x - _interface.get_position((int)BLINKY, 0)) * 2;
 		_target_tiles[1] = _interface.get_position((int)BLINKY, 1) + (y - _interface.get_position((int)BLINKY, 1)) * 2;
@@ -188,13 +200,15 @@ void  Ghost::target_tiles_chase(){
 	}
 }
 
-void Ghost::reverse_direction(){
-    int dir = (int)_direction;
-		dir < 2 ? dir += 2 : dir -= 2;
-    _direction = (Direction)dir;
+void Ghost::reverse_direction()
+{
+    int direction = (int)_direction;
+		direction < 2 ? direction += 2 : direction -= 2;
+    _direction = (Direction)direction;
 }
 
-bool Ghost::is_direction_available(Direction direction){
+bool Ghost::is_direction_available(Direction direction)
+{
 	bool special_CR = false;
 	bool reverse_direction = (int)direction != (int)_direction + 2 && (int)direction != (int)_direction - 2;
 	int i;
@@ -211,27 +225,28 @@ bool Ghost::is_direction_available(Direction direction){
 	return is_next_tile_available(direction) && reverse_direction && !special_CR;
 }
 
-float Ghost::distance_target_tiles(Direction direction){
-	int x,y;
-	x = _x;
-	y = _y;
-	if(direction == UP){
+float Ghost::distance_target_tiles(Direction direction)
+{
+	int x = _x, y = _y;
+	if(direction == UP)
 		x--;
-	}else if(direction == LEFT){
+	else if(direction == LEFT)
 		y--;
-	}else if(direction == DOWN){
+	else if(direction == DOWN)
 		x++;
-	}else if(direction == RIGHT){
+	else if(direction == RIGHT)
 		y++;
-	}	
+
 	return sqrt(pow(x-_target_tiles[0], 2) + pow(y-_target_tiles[1], 2));
 }
 
-float Ghost::distance_target_tiles(int x1, int y1, int x2, int y2){
+float Ghost::distance_target_tiles(int x1, int y1, int x2, int y2)
+{
 	return sqrt(pow(x1-x2, 2) + pow(y1 - y2, 2));
 }
 
-void Ghost::reset(){
+void Ghost::reset()
+{
 	_direction = LEFT;
 	set_speed(0.75);
 	_x = _interface.get_position((int)_name,0);

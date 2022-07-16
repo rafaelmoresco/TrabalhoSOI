@@ -20,7 +20,8 @@ class Main
 public:
 	Main() {}
 
-	static void run(void * name){
+	static void run(void * name)
+	{
 		tm_sem = new Semaphore();
 		ghost_house_sem = new Semaphore();
 
@@ -65,49 +66,51 @@ public:
 	~Main() {}
 
 private:
-	static void screen(){
-			int i = 0;
-			_open = true;
-			window = new Window();
-			timer_start = FPS;
-			while(timer_start > 0){
-				window->start();
-				timer_start--;
-			}
+	static void screen()
+	{
+		int i = 0;
+		_open = true;
+		window = new Window();
+		timer_start = FPS;
+		while(timer_start > 0){
+			window->start();
+			timer_start--;
+		}
 
-			while(_open){
-				window->KeyboardInput();
-				if(!_paused){
-					if(_dead){
-						for(i = 0; i < 11; i++){
-							timer_start = 0.1*FPS; 
-							while(timer_start > 0){
-								window->dead(i);
-								timer_start--;
-							}
+		while(_open){
+			window->KeyboardInput();
+			if(!_paused){
+				if(_dead){
+					for(i = 0; i < 11; i++){
+						timer_start = 0.1*FPS; 
+						while(timer_start > 0){
+							window->dead(i);
+							timer_start--;
 						}
-					}else if(_win){
-						timer_start = FPS; 
-						while(timer_start > 0)
-							timer_start--;
-						window->win();
-						_open = false;
-					}else if(_finish){
-						timer_start = FPS;
-						while(timer_start > 0)
-							timer_start--;
-						window->finish();
-						_open = false;
-					}else
-						_open = window->run();
-					tick();
-				}
-				Thread::yield();
+					}
+				}else if(_win){
+					timer_start = FPS; 
+					while(timer_start > 0)
+						timer_start--;
+					window->win();
+					_open = false;
+				}else if(_finish){
+					timer_start = FPS;
+					while(timer_start > 0)
+						timer_start--;
+					window->finish();
+					_open = false;
+				}else
+					_open = window->run();
+				tick();
 			}
-			window_thread->thread_exit(0);
+			Thread::yield();
+		}
+		window_thread->thread_exit(0);
 	}
 
-	static void key_event_input(){
+	static void key_event_input()
+	{
 			while(_open){
 				if(!_paused)
 					tm_sem->p();
@@ -119,7 +122,8 @@ private:
 			keyboard_thread->thread_exit(0);
 	}
 
-	static void run(){
+	static void run()
+	{
 		int i;
 		while(_open){
 			tm_sem->p();
@@ -132,7 +136,7 @@ private:
 				timer_frightened = 0.5*6*FPS;
 			i = game->update_ghosts();
 			if(i>=0 && timer_ghost_house[i] == -1)
-				timer_ghost_house[i] = 0.5*(rand()%7+1)*FPS;
+				timer_ghost_house[i] = 0.5*(rand() % 7 + 1) * FPS;
 
 			game->update_fruits();
 			_win = game->is_win();
@@ -147,7 +151,8 @@ private:
 		game_thread->thread_exit(0);
 	}
 
-	static void ghost_blinky_move(){
+	static void ghost_blinky_move()
+	{
 		bool _leave = false;
 		while(_open){
 			if(blinky->is_in_ghost_house() && timer_ghost_house[(int)BLINKY-1] == 0){
@@ -177,7 +182,8 @@ private:
 		blinky_thread->thread_exit(0);
 	}
 
-	static void ghost_pinky_move(){
+	static void ghost_pinky_move()
+	{
 		bool _leave = false;
 		while(_open){
 			if(pinky->is_in_ghost_house() && timer_ghost_house[(int)PINKY-1] == 0){
@@ -207,7 +213,8 @@ private:
 		pinky_thread->thread_exit(0);
 	}
 
-	static void ghost_inky_move(){
+	static void ghost_inky_move()
+	{
 		bool _leave = false;
 		while(_open){
 			if(inky->is_in_ghost_house() && timer_ghost_house[(int)INKY-1]==0){
@@ -237,7 +244,8 @@ private:
 		inky_thread->thread_exit(0);
 	}
 
-	static void ghost_clyde_move(){
+	static void ghost_clyde_move()
+	{
 		bool _leave = false;
 		while(_open){
 			if(clyde->is_in_ghost_house() && timer_ghost_house[(int)CLYDE-1] == 0){
@@ -267,7 +275,8 @@ private:
 		clyde_thread->thread_exit(0);
 	}
 
-	static void pacman_move(){
+	static void pacman_move()
+	{
 		while(_open){
 			tm_sem->p();
 			pacman->move();
@@ -277,7 +286,8 @@ private:
 		pacman_thread->thread_exit(0);
 	}
 
-	static void tick(){
+	static void tick()
+	{
 		int i;
 		if(timer_frightened >= 0)
 			timer_frightened--;

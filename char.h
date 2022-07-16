@@ -6,13 +6,14 @@
 #include <cmath> 
 #include <iostream>
 
-class Char{
+class Char
+{
     public:
         Char(CharName name);
         void run();
         int move();
         void update_position(); 
-        void set_speed(float percentage);
+        void set_speed(float speed);
 				void set_direction(Direction direction);
 				bool is_next_tile_available(Direction direction);
         int get_x();

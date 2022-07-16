@@ -5,10 +5,10 @@ sf::Event Window::event;
 Window::Window()
 {
     load_and_bind_textures();
-    new (&_window) sf::RenderWindow(sf::VideoMode(8*28*2, 8*36*2), "Pac-Man");
+    new (&_window) sf::RenderWindow(sf::VideoMode(448, 576), "Pacman");
 
     _window.setKeyRepeatEnabled(false);
-		_view.reset(sf::FloatRect(0, 0, 8*28, 8*36));
+		_view.reset(sf::FloatRect(0, 0, 224, 288));
 		_window.setView(_view);
 		pacsprite = 0;
 		ghostsprite = 0;
@@ -16,7 +16,8 @@ Window::Window()
 		draw_scores();
 }
 
-void Window::KeyboardInput(){
+void Window::KeyboardInput()
+{
 	while (_window.pollEvent(event)){
 		switch (event.type) {
 			case sf::Event::Closed:
@@ -51,10 +52,11 @@ void Window::KeyboardInput(){
 	}
 }
 
-void Window::draw_scores(){
+void Window::draw_scores()
+{
 	int i,num;
-	int score_pos[2] = {6*8, 1*8+4};
-	int highscore_pos[2] = {16*8, 1*8+4};
+	int score_pos[2] = {48, 12};
+	int highscore_pos[2] = {128, 12};
 	int _points = _interface.get_score();
 	int _high_score = _interface.get_high_score();
 
@@ -70,42 +72,44 @@ void Window::draw_scores(){
 	}
 }
 
-void Window::draw_maze(){
+void Window::draw_maze()
+{
 	int i, j;
-	Tile aux;
+	Tile tile_aux;
 
 	_window.clear();
 	maze_sprite.setPosition(0, 24);
 	_window.draw(maze_sprite);
-	high_sprite.setPosition(75,2);
+	high_sprite.setPosition(75, 2);
 	_window.draw(high_sprite);
-	score_sprite.setPosition(112,2);
+	score_sprite.setPosition(112, 2);
 	_window.draw(score_sprite);
-	life_sprite.setPosition(8*2,8*34);
+	life_sprite.setPosition(16, 272);
 	_window.draw(life_sprite);
-	life_sprite.setPosition(8*4,8*34);
+	life_sprite.setPosition(32, 272);
 	_window.draw(life_sprite);
-	cherry_sprite.setPosition(8*24,8*34);
+	cherry_sprite.setPosition(192, 272);
 	_window.draw(cherry_sprite);
 
 	for(i = 0; i < 31; i++){
 		for(j = 0; j < 28; j++){
-			aux = _interface.get_maze(i,j);
-			if(aux == o){
-				pill_sprite.setPosition(8*j,24 + 8*i);
+			tile_aux = _interface.get_maze(i,j);
+			if(tile_aux == o){
+				pill_sprite.setPosition(8 * j, 24 + 8 * i);
 				_window.draw(pill_sprite);
-			}else if(aux == O){
-				bigPill_sprite.setPosition(8*j,8*i+24);
+			}else if(tile_aux == O){
+				bigPill_sprite.setPosition(8 * j, 8 * i + 24);
 				_window.draw(bigPill_sprite);
-			}else if(aux == F){
-				cherry_sprite.setPosition(8*j-3,8*i+24-3);
+			}else if(tile_aux == F){
+				cherry_sprite.setPosition(8 * j - 3, 8 * i + 21);
 				_window.draw(cherry_sprite);
 			}
 		}
 	}
 }
 
-void Window::draw_pacman(){
+void Window::draw_pacman()
+{
 	sf::Sprite sprite;
 	sprite = pacman[(int)(pacsprite / 4)][(int)_interface.get_direction((int)PACMAN)];
 	pacsprite == 11 ? pacsprite = 0 : pacsprite++;
@@ -113,10 +117,11 @@ void Window::draw_pacman(){
 	_window.draw(sprite);
 }
 
-void Window::draw_ghost(CharName name){
+void Window::draw_ghost(CharName name)
+{
 	if(_interface.get_mode((int)name) == FRIGHTENED && !_interface.get_eaten((int)name)){
 		frightened_b[(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
-		_window.draw(frightened_b[(int)(ghostsprite/4)]);
+		_window.draw(frightened_b[(int)(ghostsprite / 4)]);
 	}else{
 		if(!_interface.get_eaten((int)name)){
 			ghosts[(int)name - 1][(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name,1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
@@ -129,35 +134,40 @@ void Window::draw_ghost(CharName name){
 	ghostsprite == 7 ? ghostsprite = 0 : ghostsprite++;
 }
 
-void Window::start(){
+void Window::start()
+{
 		draw_ghost(BLINKY);
 		draw_ghost(PINKY);
 		draw_ghost(INKY);
 		draw_ghost(CLYDE);
 		draw_pacman();
-		ready_sprite.setPosition(11*8, 20*8);
+		ready_sprite.setPosition(88, 160);
 		_window.draw(ready_sprite);
 		_window.display();
 }
 
-void Window::dead(int i){
+void Window::dead(int i)
+{
 	sf::Sprite sprite;
-		draw_maze();	
-		sprite = dying[i];
-		sprite.setPosition(_interface.get_position_px((int)PACMAN,1) - 7, 24 + _interface.get_position_px((int)PACMAN,0) - 7);
-		_window.draw(sprite);
-		_window.display();
+	draw_maze();	
+	sprite = dying[i];
+	sprite.setPosition(_interface.get_position_px((int)PACMAN,1) - 7, 24 + _interface.get_position_px((int)PACMAN,0) - 7);
+	_window.draw(sprite);
+	_window.display();
 }
 
-void Window::win(){
+void Window::win()
+{
 	_window.close();
 }
 
-void Window::finish(){
+void Window::finish()
+{
 	_window.close();
 }
 
-bool Window::run(){
+bool Window::run()
+{
 	draw_maze();
 	draw_scores();
 
@@ -171,7 +181,8 @@ bool Window::run(){
 	return _window.isOpen();
 }
 
-void Window::load_and_bind_textures(){
+void Window::load_and_bind_textures()
+{
     maze_tex.loadFromFile("sprites/maze/maze.png");
     maze_sprite.setTexture(maze_tex);
 

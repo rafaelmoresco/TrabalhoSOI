@@ -1,10 +1,12 @@
 #include "keyevent.h"
 
-KeyEvent::KeyEvent(Game *game){
+KeyEvent::KeyEvent(Game *game)
+{
 	_game = game;
 }
 
-bool KeyEvent::handler(){
+bool KeyEvent::handler()
+{
 	if(!_key.get_handled()){
 		Key key = _key.get_key();
 		if(key == U_KEY)

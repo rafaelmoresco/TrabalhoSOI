@@ -5,7 +5,8 @@
 #include "enum.h"
 #include "char.h"
 
-class Pacman : public Char{
+class Pacman : public Char
+{
     public:
         Pacman(CharName name);
         void reset();

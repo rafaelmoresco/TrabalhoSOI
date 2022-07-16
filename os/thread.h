@@ -15,7 +15,6 @@ class Thread
 protected:
     typedef CPU::Context Context;
 public:
-
     typedef Ordered_List<Thread> System_Queue;
 
     // Thread State

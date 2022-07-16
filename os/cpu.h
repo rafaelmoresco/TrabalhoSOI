@@ -11,7 +11,6 @@ __BEGIN_API
 class CPU
 {
     public:
-
         class Context
         {
         private:

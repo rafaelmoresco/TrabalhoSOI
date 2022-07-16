@@ -16,7 +16,8 @@ __BEGIN_API
      * Realiza a inicialização da class Thread.
      * Cria as Threads main e dispatcher.
      */ 
-	void Thread::init(void (*main)(void *)){
+	void Thread::init(void (*main)(void *))
+    {
 		db<Thread>(TRC) << "Thread::init(void (*main)(void *))\n";
 
 		new (&_main_context) Context();
@@ -41,7 +42,8 @@ __BEGIN_API
      * Deve encapsular a chamada para a troca de contexto realizada pela class CPU.
      * Valor de retorno negativo se houve erro, ou zero.
      */ 
-    int Thread::switch_context(Thread * prev, Thread * next) {
+    int Thread::switch_context(Thread * prev, Thread * next) 
+    {
         db<Thread>(TRC)<<"Thread::switch_context()\n";
         if (prev != next) {
             _running = next;
@@ -55,7 +57,8 @@ __BEGIN_API
     /*
      * Define um novo estado para a thread.
      */ 
-    void Thread::set_state(Thread::State state){
+    void Thread::set_state(Thread::State state)
+    {
         db<Thread>(TRC)<<"Thread::set_state(): Thread " << this->id() << " => ";
 
         switch(state){
@@ -78,14 +81,16 @@ __BEGIN_API
     /*
      * Devolve o elemento da fila.
     */
-    Thread::System_Queue::Element* Thread::link(){
+    Thread::System_Queue::Element* Thread::link()
+    {
         return &_link;
     }
 
     /*
      * Atualiza prioridade com timestamp.
     */
-    void Thread::update_priority(){
+    void Thread::update_priority()
+    {
 		db<Thread>(TRC)<<"Thread::update_priority()\n";
 
 		int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
@@ -96,7 +101,8 @@ __BEGIN_API
     /*
      * Adiciona thread na fila de prontos.
     */
-    void Thread::enqueue(Thread * thread,Thread::System_Queue &queue){
+    void Thread::enqueue(Thread * thread,Thread::System_Queue &queue)
+    {
 	    db<Thread>(TRC)<<"Thread::enqueue(Thread * thread,Thread::System_Queue &queue)\n";
 
         if(thread == 0)
@@ -128,6 +134,7 @@ __BEGIN_API
      * Remove thread na fila de prontos.
     */
 	void Thread::dequeue(Thread * thread, Thread::System_Queue &queue){
+
 		db<Thread>(TRC)<<"Thread::dequeue(Thread * thread, Thread::System_Queue &queue)\n";
 		queue.remove(thread->link());
 
@@ -144,7 +151,8 @@ __BEGIN_API
      * Devolve o processador para a thread dispatcher que irá escolher outra thread pronta
      * para ser executada.
      */
-	void Thread::yield(){
+	void Thread::yield()
+    {
 		db<Thread>(TRC)<<"Thread::yield()\n";
 		Thread *next_thread = next();
 		if(next_thread != 0){
@@ -162,7 +170,8 @@ __BEGIN_API
      * Executa enquanto houverem threads do usuário.
      * Chama o escalonador para definir a próxima tarefa a ser executada.
      */
-	void Thread::dispatcher(){
+	void Thread::dispatcher()
+    {
         db<Thread>(TRC)<<"Thread::dispatcher()\n";
         while(!_ready.empty() && _ready.head()->object() != &_dispatcher) {
 
@@ -184,7 +193,8 @@ __BEGIN_API
     /*
     * Escolhe a thread mais antiga diferente da main.
     */
-	Thread * Thread::next(){
+	Thread * Thread::next()
+    {
 		if(_ready.size() == 0){
 			return 0;
 		}
@@ -196,7 +206,8 @@ __BEGIN_API
      * exit_code Código de término devolvido pela tarefa (ignorar agora, vai ser usado mais tarde).
      * Quando a thread encerra, o controle deve retornar à main. 
      */  
-    void Thread::thread_exit(int exit_code) {
+    void Thread::thread_exit(int exit_code) 
+    {
         db<Thread>(TRC)<<"Thread::exit()\n";
 
         set_state(FINISHING);
@@ -212,7 +223,8 @@ __BEGIN_API
     /*
      * Retorna o ID da thread.
      */ 
-    int Thread::id() {
+    int Thread::id()
+    {
         db<Thread>(TRC)<<"Thread::id()\n";
         return Thread::_id;
     }
@@ -220,7 +232,8 @@ __BEGIN_API
     /*
      * Qualquer outro método que você achar necessário para a solução.
      */ 
-    CPU::Context * volatile Thread::context() {
+    CPU::Context * volatile Thread::context() 
+    {
         db<Thread>(TRC)<<"Thread::context()\n";
         return Thread::_context;
     }
@@ -228,14 +241,16 @@ __BEGIN_API
     /*
      * Devolve o estado da thread.
     */
-    Thread::State Thread::state() {
+    Thread::State Thread::state() 
+    {
         return _state;
     }
 
     /*
      * Espera a thread acabar.
      */ 
-    int Thread::join() {
+    int Thread::join() 
+    {
         db<Thread>(TRC)<<"Thread::join()\n";
 		if(this == _running) {
 			db<Thread>(ERR)<<"Thread::join(): Thread " << this->id() << " tentou realizar join() em si mesma.\n";
@@ -256,13 +271,15 @@ __BEGIN_API
     /*
      * Faz a thread voltar a atividade.
      */ 
-    void Thread::resume() {
+    void Thread::resume() 
+    {
         db<Thread>(TRC)<<"Thread::resume()\n";
         dequeue(this, _suspend);
         switch_context(_running, this);
     }
 
-    void Thread::suspend() {
+    void Thread::suspend() 
+    {
         db<Thread>(TRC)<<"Thread::suspend()\n";
 		this->_joined = _running;
         _running->set_state(SUSPENDED);
@@ -271,7 +288,8 @@ __BEGIN_API
     }
 
 //vamo dormir porra
-    void Thread::sleep(System_Queue &_sleeping){
+    void Thread::sleep(System_Queue &_sleeping)
+    {
 		db<Thread>(TRC)<<"Thread::sleep()\n";
 
 		enqueue(_running, _sleeping);
@@ -279,7 +297,8 @@ __BEGIN_API
 		yield();
 	}
 
-	void Thread::wakeup(System_Queue &_sleeping){
+	void Thread::wakeup(System_Queue &_sleeping)
+    {
 		db<Thread>(TRC)<<"Thread::wakeup()\n";
 		if(_sleeping.size() != 0){
 			Thread * thread = _sleeping.head()->object();
@@ -294,7 +313,8 @@ __BEGIN_API
 		}
 	}
 
-	void Thread::wakeup_all(System_Queue &_sleeping){
+	void Thread::wakeup_all(System_Queue &_sleeping)
+    {
 		db<Thread>(TRC) << "Thread::wakeup_all()\n";
 		Thread * thread = 0;
 		while(_sleeping.size() > 0){
@@ -310,7 +330,8 @@ __BEGIN_API
     /*
      * Destrutor de uma thread.
      */ 
-	Thread::~Thread(){
+	Thread::~Thread()
+    {
 		db<Thread>(TRC) << "Thread~Thread()\n";
 
         _ready.remove(this);
