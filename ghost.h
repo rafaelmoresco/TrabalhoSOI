@@ -10,7 +10,7 @@
 class Ghost : public Char
 {
     public:
-		Ghost(CharName name);
+		Ghost(Name name);
         void set_mode(Mode mode);
 		static void set_main_mode(Mode mode);
         Mode get_mode();
@@ -24,8 +24,8 @@ class Ghost : public Char
         void target_tiles_chase();
         void reverse_direction();
 		bool is_direction_available(Direction direction);
-		float distance_target_tiles(Direction direction);
-		float distance_target_tiles(int x1, int y1, int x2, int y2);
+		double distance_target_tiles(Direction direction);
+		double distance_target_tiles(int x1, int y1, int x2, int y2);
 		void reset();
     private:
 		Mode _mode;

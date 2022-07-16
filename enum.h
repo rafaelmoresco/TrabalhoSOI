@@ -1,13 +1,10 @@
 #ifndef enum_h
 #define enum_h
 
-#define FPS 5000;
 typedef enum {W, G, P, u, o, e, O, E, F} Tile;
-typedef enum {PACMAN, BLINKY, PINKY, INKY, CLYDE} CharName;
-typedef enum {SCATTER, CHASE, FRIGHTENED} Mode;
+typedef enum {UP_KEY, LEFT_KEY, DOWN_KEY, RIGHT_KEY, P_PAUSE_KEY, Q_EXIT_KEY} DirectionKey;
 typedef enum {UP, LEFT, DOWN, RIGHT} Direction;
-typedef enum {U_KEY, L_KEY, D_KEY, R_KEY, P_KEY, Q_KEY} Key;
-
- 
+typedef enum {PACMAN, BLINKY, PINKY, INKY, CLYDE} Name;
+typedef enum {SCATTER, CHASE, FRIGHTENED} Mode;
 
 #endif

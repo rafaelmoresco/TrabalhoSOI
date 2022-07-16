@@ -18,46 +18,46 @@ void Game::update_interface()
 
 bool Game::update_dots()
 {
-    int pacx = _pacman->get_x();
-    int pacy = _pacman->get_y();
+    int pacman_x = _pacman->get_x();
+    int pacman_y = _pacman->get_y();
 		int i;
-		bool rtn = false;
+		bool up_ghost = false;
 
-    if(_interface.get_maze(pacx, pacy) == o){
-        _interface.set_maze(u, pacx, pacy);
-        _dot_counter++;
+    if(_interface.get_maze(pacman_x, pacman_y) == o){
+        _interface.set_maze(u, pacman_x, pacman_y);
+        counter++;
         _interface.add_points(10);
-    }else if(_interface.get_maze(pacx,pacy) == O){
-        _interface.set_maze(u,pacx,pacy);
+    }else if(_interface.get_maze(pacman_x, pacman_y) == O){
+        _interface.set_maze(u,pacman_x, pacman_y);
 		for(i = 0; i < 4; i++){
 			_ghosts[i]->set_mode(FRIGHTENED);
-			rtn = true;
+			up_ghost = true;
 		}
-        _dot_counter++;
+        counter++;
         _interface.add_points(50);
     }
-	return rtn;
+	return up_ghost;
 }
 
 int Game::update_ghosts()
 {
-	int pacx, pacy, gx[4], gy[4], i, rtn = -1;
-	pacx = _pacman->get_x();
-	pacy = _pacman->get_y();
+	int pacman_x, pacman_y, ghost_x[4], ghost_y[4], i, up_ghost = -1;
+	pacman_x = _pacman->get_x();
+	pacman_y = _pacman->get_y();
 	for(i = 0; i < 4; i++){
-		gx[i] = _ghosts[i]->get_x();
-		gy[i] = _ghosts[i]->get_y();
+		ghost_x[i] = _ghosts[i]->get_x();
+		ghost_y[i] = _ghosts[i]->get_y();
 	}
 	for(i = 0; i < 4; i++){
-		if((gx[i] >= 13 && gx[i] <= 15) && (gy[i] >= 11 && gy[i] <= 16) && !_ghosts[i]->is_in_ghost_house()){
+		if((ghost_x[i] >= 13 && ghost_x[i] <= 15) && (ghost_y[i] >= 11 && ghost_y[i] <= 16) && !_ghosts[i]->is_in_ghost_house()){
 			_ghosts[i]->set_ghost_house(true);
 			_ghosts[i]->set_eaten(false);
-			rtn = i;
+			up_ghost = i;
 			break;
 		}
 	}
 	for(i = 0; i < 4; i++){
-		if(pacx == gx[i] && pacy == gy[i]){
+		if(pacman_x == ghost_x[i] && pacman_y == ghost_y[i]){
 			if(_ghosts[i]->get_mode() == FRIGHTENED){
 				if(!_ghosts[i]->get_eaten()){
 					_ghosts[i]->set_eaten(true);
@@ -67,17 +67,17 @@ int Game::update_ghosts()
 				_pacman->set_eaten(true);
 		}
 	}
-	return rtn;
+	return up_ghost;
 }
 
 void Game::update_fruits()
 {
-	int pacx = _pacman->get_x();
-	int pacy = _pacman->get_y();
+	int pacman_x = _pacman->get_x();
+	int pacman_y = _pacman->get_y();
 
-	if(_dot_counter == 70 || _dot_counter == 170)
+	if(counter == 70 || counter == 170)
 		_interface.set_maze(F, 17, 13);
-	if(_interface.get_maze(pacx,pacy) == F){
+	if(_interface.get_maze(pacman_x,pacman_y) == F){
 		_interface.set_maze(u, 17, 13);
 		_interface.add_points(100);
 	}
@@ -93,7 +93,7 @@ void Game::set_direction(int name,Direction direction)
 
 bool Game::is_win()
 {
-	if(_dot_counter == 244)
+	if(counter == 244)
 		return true;
 	return false;
 }

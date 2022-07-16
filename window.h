@@ -18,11 +18,11 @@ public:
     void KeyboardInput();
 		void draw_maze();
 		void draw_pacman();
-		void draw_ghost(CharName name);
+		void draw_ghost(Name name);
 		void draw_scores();
 		void set_game(Game *game);
     bool run(); 
-    void draw_texture(unsigned int texture, int length, int height, float angle);
+    void draw_texture(unsigned int texture, int length, int height, double angle);
 		void start();
 		void dead(int i);
 		void win();

@@ -8,12 +8,12 @@ Window::Window()
     new (&_window) sf::RenderWindow(sf::VideoMode(448, 576), "Pacman");
 
     _window.setKeyRepeatEnabled(false);
-		_view.reset(sf::FloatRect(0, 0, 224, 288));
-		_window.setView(_view);
-		pacsprite = 0;
-		ghostsprite = 0;
-		draw_maze();
-		draw_scores();
+	_view.reset(sf::FloatRect(0, 0, 224, 288));
+	_window.setView(_view);
+	pacsprite = 0;
+	ghostsprite = 0;
+	draw_maze();
+	draw_scores();
 }
 
 void Window::KeyboardInput()
@@ -25,27 +25,27 @@ void Window::KeyboardInput()
 				break;
 			case sf::Event::KeyPressed:
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-						std::cout << "Keyboard esquerda!" << std::endl;
-						_key.set_key(L_KEY);
-						_key.set_handled(false);
+					std::cout << "Keyboard esquerda!" << std::endl;
+					_key.set_key(LEFT_KEY);
+					_key.set_handled(false);
 				} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-						std::cout << "Keyboard direita!" << std::endl;
-						_key.set_key(R_KEY);
-						_key.set_handled(false);
+					std::cout << "Keyboard direita!" << std::endl;
+					_key.set_key(RIGHT_KEY);
+					_key.set_handled(false);
 				} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-						std::cout << "Keyboard para baixo!" << std::endl;
-						_key.set_key(D_KEY);
-						_key.set_handled(false);
+					std::cout << "Keyboard para baixo!" << std::endl;
+					_key.set_key(DOWN_KEY);
+					_key.set_handled(false);
 				} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-						std::cout << "Keyboard para cima!" << std::endl;
-						_key.set_key(U_KEY);
-						_key.set_handled(false);
+					std::cout << "Keyboard para cima!" << std::endl;
+					_key.set_key(UP_KEY);
+					_key.set_handled(false);
 				} else if(event.key.code == 15) {
-						_key.set_key(P_KEY);
-						_key.set_handled(false);
+					_key.set_key(P_PAUSE_KEY);
+					_key.set_handled(false);
 				} else if(event.key.code == 16) {
-						_key.set_key(Q_KEY);
-						_window.close();
+					_key.set_key(Q_EXIT_KEY);
+					_window.close();
 				}
 				break;
 			}
@@ -117,7 +117,7 @@ void Window::draw_pacman()
 	_window.draw(sprite);
 }
 
-void Window::draw_ghost(CharName name)
+void Window::draw_ghost(Name name)
 {
 	if(_interface.get_mode((int)name) == FRIGHTENED && !_interface.get_eaten((int)name)){
 		frightened_b[(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
@@ -136,14 +136,14 @@ void Window::draw_ghost(CharName name)
 
 void Window::start()
 {
-		draw_ghost(BLINKY);
-		draw_ghost(PINKY);
-		draw_ghost(INKY);
-		draw_ghost(CLYDE);
-		draw_pacman();
-		ready_sprite.setPosition(88, 160);
-		_window.draw(ready_sprite);
-		_window.display();
+	draw_ghost(BLINKY);
+	draw_ghost(PINKY);
+	draw_ghost(INKY);
+	draw_ghost(CLYDE);
+	draw_pacman();
+	ready_sprite.setPosition(88, 160);
+	_window.draw(ready_sprite);
+	_window.display();
 }
 
 void Window::dead(int i)

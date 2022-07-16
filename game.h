@@ -24,7 +24,7 @@ class Game
 
     private:
         Interface _interface;
-        unsigned int _dot_counter;
+        unsigned int counter;
         Pacman *_pacman;
         Ghost *_ghosts[4];
 };

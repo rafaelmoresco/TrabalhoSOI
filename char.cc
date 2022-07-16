@@ -1,16 +1,16 @@
 #include "char.h"
 
-Char::Char(CharName name)
+Char::Char(Name name)
 {
 	_name = name;
 	_direction = LEFT;
-	set_speed(0.75);
+	set_speed(1);
 	_x = _interface.get_position((int)name, 0);
 	_y = _interface.get_position((int)name, 1);
 	_b_x = 0.0;
 	_b_y = 0.0;
-	_x_px = _interface.get_position_px((int)name,0);
-	_y_px = _interface.get_position_px((int)name,1);
+	_x_px = _interface.get_position_px((int)name, 0);
+	_y_px = _interface.get_position_px((int)name, 1);
 	_eaten = false;
 }
 
@@ -22,19 +22,19 @@ int Char::move()
 		else if(!is_next_tile_available(UP) && _x_px + _b_x - _speed> _x * 8 + 4)
 			_b_x -= _speed;
 	}else if(_direction == LEFT){
-		if( is_next_tile_available(LEFT))
+		if(is_next_tile_available(LEFT))
 			_b_y -= _speed;
-		else if(!is_next_tile_available(LEFT) && _y_px + _b_y - _speed> _y*8 +4)
+		else if(!is_next_tile_available(LEFT) && _y_px + _b_y - _speed> _y * 8 +4)
 			_b_y -= _speed;
 	}else if(_direction == DOWN){
-		if ( is_next_tile_available(DOWN))
+		if (is_next_tile_available(DOWN))
 			_b_x += _speed;
-		else if(!is_next_tile_available(DOWN) && _x_px + _b_x + _speed < _x*8 +4)
+		else if(!is_next_tile_available(DOWN) && _x_px + _b_x + _speed < _x * 8 +4)
 			_b_x += _speed;
 	}else if(_direction == RIGHT){
 		if(is_next_tile_available(RIGHT))
 			_b_y += _speed;
-		else if(!is_next_tile_available(RIGHT) && _y_px + _b_y + _speed < _y*8 +4)
+		else if(!is_next_tile_available(RIGHT) && _y_px + _b_y + _speed < _y * 8 +4)
 			_b_y += _speed;
 	}
 	char a;
@@ -48,7 +48,7 @@ void Char::update_position()
 	if(_x == 14 && _y_px < 6){
 		_y = 27;
 		_y_px = _y * 8 + 2;
-	}else if(_x == 14 && _y_px > 27 * 8 + 2){
+	}else if(_x == 14 && _y_px > 218){
 		_y = 0;
 		_y_px = _y * 8 + 6;
 	}
@@ -83,13 +83,13 @@ void Char::update_position()
 			y = 0;
 
 		_y = y;
-		_interface.set_position(_x,(int)_name,0);
-		_interface.set_position(_y,(int)_name,1);
+		_interface.set_position(_x, (int)_name, 0);
+		_interface.set_position(_y, (int)_name, 1);
 }
 
-void Char::set_speed(float speed)
+void Char::set_speed(double speed)
 {
-	_speed = speed *75.0 / FPS;
+	_speed = speed * 75 / 6000;
 }
 
 bool Char::is_next_tile_available(Direction direction)
@@ -136,12 +136,12 @@ int Char::get_y()
     return _y;
 }
 
-float Char::get_x_px()
+double Char::get_x_px()
 {
     return _x_px;
 }
 
-float Char::get_y_px()
+double Char::get_y_px()
 {
     return _y_px;
 }
@@ -156,12 +156,12 @@ void Char::set_y(int y)
     _y = y;
 }
 
-void Char::set_x_px(float x_px)
+void Char::set_x_px(double x_px)
 {
     _x_px = x_px;
 }
 
-void Char::set_y_px(float y_px)
+void Char::set_y_px(double y_px)
 {
     _y_px = y_px;
 }

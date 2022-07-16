@@ -2,7 +2,7 @@
 
 Mode Ghost::_main_mode = SCATTER;
 
-Ghost::Ghost(CharName name) : Char(name)
+Ghost::Ghost(Name name) : Char(name)
 {
 	_mode = SCATTER;
 	_crossroad[0] = -1;
@@ -102,7 +102,7 @@ bool Ghost::crossroad()
 void Ghost::crossroad_decision()
 {
 	int i, directions_available = 0, direction;
-	float distance[4], dist;
+	double distance[4], dist;
 	bool available[4];
 	
 	for(i = 0; i < 4; i++)
@@ -209,7 +209,7 @@ void Ghost::reverse_direction()
 
 bool Ghost::is_direction_available(Direction direction)
 {
-	bool special_CR = false;
+	bool crossroad_behavior = false;
 	bool reverse_direction = (int)direction != (int)_direction + 2 && (int)direction != (int)_direction - 2;
 	int i;
 	int crossroad_position[4][2] = {{23,12}, {23,15}, {11,12}, {11,15}};
@@ -217,15 +217,15 @@ bool Ghost::is_direction_available(Direction direction)
 	if(_mode != FRIGHTENED && direction == UP){
 		for(i = 0; i < 4; i++){
 			if(_x == crossroad_position[i][0] && _y == crossroad_position[i][1]){
-				special_CR = true;
+				crossroad_behavior = true;
 			}
 		}
 	}
 
-	return is_next_tile_available(direction) && reverse_direction && !special_CR;
+	return is_next_tile_available(direction) && reverse_direction && !crossroad_behavior;
 }
 
-float Ghost::distance_target_tiles(Direction direction)
+double Ghost::distance_target_tiles(Direction direction)
 {
 	int x = _x, y = _y;
 	if(direction == UP)
@@ -240,7 +240,7 @@ float Ghost::distance_target_tiles(Direction direction)
 	return sqrt(pow(x-_target_tiles[0], 2) + pow(y-_target_tiles[1], 2));
 }
 
-float Ghost::distance_target_tiles(int x1, int y1, int x2, int y2)
+double Ghost::distance_target_tiles(int x1, int y1, int x2, int y2)
 {
 	return sqrt(pow(x1-x2, 2) + pow(y1 - y2, 2));
 }
@@ -249,12 +249,12 @@ void Ghost::reset()
 {
 	_direction = LEFT;
 	set_speed(0.75);
-	_x = _interface.get_position((int)_name,0);
-	_y = _interface.get_position((int)_name,1);
+	_x = _interface.get_position((int)_name, 0);
+	_y = _interface.get_position((int)_name, 1);
 	_b_x = 0.0;
 	_b_y = 0.0;
-	_x_px = _interface.get_position_px((int)_name,0);
-	_y_px = _interface.get_position_px((int)_name,1);
+	_x_px = _interface.get_position_px((int)_name, 0);
+	_y_px = _interface.get_position_px((int)_name, 1);
 	_eaten = false;
 	_mode = SCATTER;
 	_crossroad[0] = -1;

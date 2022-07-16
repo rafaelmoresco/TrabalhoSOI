@@ -1,14 +1,14 @@
 #include "keyinput.h"
 
-Key KeyInput::_key = L_KEY;
+DirectionKey KeyInput::_key = LEFT_KEY;
 bool KeyInput::_handled = false;
 
-Key KeyInput::get_key()
+DirectionKey KeyInput::get_key()
 {
     return _key;
 }
 
-void KeyInput::set_key(Key key)
+void KeyInput::set_key(DirectionKey key)
 {
     _key = key;
 }

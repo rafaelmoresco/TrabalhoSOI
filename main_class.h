@@ -36,11 +36,11 @@ public:
 		window_thread = new Thread(screen);
 		keyboard_thread = new Thread(key_event_input);
 		game_thread = new Thread(run);
-		blinky_thread = new Thread(ghost_blinky_move);
-		pinky_thread = new Thread(ghost_pinky_move);
-		inky_thread = new Thread(ghost_inky_move);
-		clyde_thread = new Thread(ghost_clyde_move);
-		pacman_thread = new Thread(pacman_move);
+		blinky_thread = new Thread(ghost_blinky_behavior);
+		pinky_thread = new Thread(ghost_pinky_behavior);
+		inky_thread = new Thread(ghost_inky_behavior);
+		clyde_thread = new Thread(ghost_clyde_behavior);
+		pacman_thread = new Thread(pacman_behavior);
 
 		window_thread->join();
 		
@@ -71,7 +71,7 @@ private:
 		int i = 0;
 		_open = true;
 		window = new Window();
-		timer_start = FPS;
+		timer_start = 6000;
 		while(timer_start > 0){
 			window->start();
 			timer_start--;
@@ -82,20 +82,20 @@ private:
 			if(!_paused){
 				if(_dead){
 					for(i = 0; i < 11; i++){
-						timer_start = 0.1*FPS; 
+						timer_start = 600; 
 						while(timer_start > 0){
 							window->dead(i);
 							timer_start--;
 						}
 					}
 				}else if(_win){
-					timer_start = FPS; 
+					timer_start = 6000; 
 					while(timer_start > 0)
 						timer_start--;
 					window->win();
 					_open = false;
 				}else if(_finish){
-					timer_start = FPS;
+					timer_start = 6000;
 					while(timer_start > 0)
 						timer_start--;
 					window->finish();
@@ -133,10 +133,10 @@ private:
 				_dead = false;
 			}
 			if(game->update_dots())
-				timer_frightened = 0.5*6*FPS;
+				timer_frightened = 6000;
 			i = game->update_ghosts();
 			if(i>=0 && timer_ghost_house[i] == -1)
-				timer_ghost_house[i] = 0.5*(rand() % 7 + 1) * FPS;
+				timer_ghost_house[i] = 0.5*(rand() % 7 + 1) * 6000;
 
 			game->update_fruits();
 			_win = game->is_win();
@@ -151,7 +151,7 @@ private:
 		game_thread->thread_exit(0);
 	}
 
-	static void ghost_blinky_move()
+	static void ghost_blinky_behavior()
 	{
 		bool _leave = false;
 		while(_open){
@@ -182,7 +182,7 @@ private:
 		blinky_thread->thread_exit(0);
 	}
 
-	static void ghost_pinky_move()
+	static void ghost_pinky_behavior()
 	{
 		bool _leave = false;
 		while(_open){
@@ -213,7 +213,7 @@ private:
 		pinky_thread->thread_exit(0);
 	}
 
-	static void ghost_inky_move()
+	static void ghost_inky_behavior()
 	{
 		bool _leave = false;
 		while(_open){
@@ -244,13 +244,13 @@ private:
 		inky_thread->thread_exit(0);
 	}
 
-	static void ghost_clyde_move()
+	static void ghost_clyde_behavior()
 	{
 		bool _leave = false;
 		while(_open){
 			if(clyde->is_in_ghost_house() && timer_ghost_house[(int)CLYDE-1] == 0){
 				if(!_leave){
-					clyde->set_mode((Mode)(current_mode%2));
+					clyde->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();
 				}
 				tm_sem->p();
@@ -275,7 +275,7 @@ private:
 		clyde_thread->thread_exit(0);
 	}
 
-	static void pacman_move()
+	static void pacman_behavior()
 	{
 		while(_open){
 			tm_sem->p();
@@ -296,11 +296,11 @@ private:
 
 		if(timer_mode == -1){
 			if(current_mode < 7){
-				timer_mode = 0.5*mode_periods[current_mode]*FPS;
+				timer_mode = mode_periods[current_mode]*3000;
 				current_mode++; 
 			}
 		}
-		for(i=0;i<4;i++){
+		for(i = 0; i < 4; i++){
 			if(timer_ghost_house[i] > 0)
 				timer_ghost_house[i]--;
 		}

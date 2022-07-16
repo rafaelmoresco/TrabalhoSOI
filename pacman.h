@@ -8,7 +8,7 @@
 class Pacman : public Char
 {
     public:
-        Pacman(CharName name);
+        Pacman(Name name);
         void reset();
 };
 

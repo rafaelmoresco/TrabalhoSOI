@@ -8,16 +8,16 @@ KeyEvent::KeyEvent(Game *game)
 bool KeyEvent::handler()
 {
 	if(!_key.get_handled()){
-		Key key = _key.get_key();
-		if(key == U_KEY)
+		DirectionKey key = _key.get_key();
+		if(key == UP_KEY)
 			_game->set_direction((int)PACMAN, UP);
-		else if(key == L_KEY)
+		else if(key == LEFT_KEY)
 			_game->set_direction((int)PACMAN, LEFT);
-		else if(key == D_KEY)
+		else if(key == DOWN_KEY)
 			_game->set_direction((int)PACMAN, DOWN);
-		else if(key == R_KEY)
+		else if(key == RIGHT_KEY)
 			_game->set_direction((int)PACMAN, RIGHT);
-		else if(key == P_KEY)
+		else if(key == P_PAUSE_KEY)
 			_paused = !_paused && true;
 		_key.set_handled(true);
 	}

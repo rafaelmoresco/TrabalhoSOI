@@ -7,11 +7,11 @@ class KeyInput
     public:
 				static bool get_handled();
 				static void set_handled(bool handled); 
-        static Key get_key();
-        static void set_key(Key key);
+        static DirectionKey get_key();
+        static void set_key(DirectionKey key);
     private:
 				static bool _handled;
-        static Key _key;
+        static DirectionKey _key;
 };
 
 #endif

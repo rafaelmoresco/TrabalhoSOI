@@ -1,6 +1,6 @@
 #include "pacman.h"
 
-Pacman::Pacman(CharName name): Char(name)
+Pacman::Pacman(Name name): Char(name)
 {
 	set_speed(0.8);
 }
