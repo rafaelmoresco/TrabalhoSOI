@@ -119,6 +119,7 @@ void Game::reset_counter()
 
 void Game::next_level()
 {
+	_interface.add_level();
 	reset_counter();
 	_interface.reset_maze();
 	_interface.reset_pills();

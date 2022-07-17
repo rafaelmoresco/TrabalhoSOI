@@ -15,6 +15,8 @@ class Interface
 		int get_points();
 		int get_high_score();
 		bool get_eaten(int name);
+		int get_lives();
+		int get_level();
 
 		void set_maze(Tile tile, int x, int y);
 		void set_position(int i, int x, int y);
@@ -26,11 +28,12 @@ class Interface
 		void set_eaten(bool eaten, int name);
 
 		void add_points(int points);
+		void add_level();
 		void lose_life();
-		int get_lives();
-		
+
 		void reset_maze();
 		void reset_pills();
+		void reset_level();
 		void reset_lives();
     private:
         static Tile _maze[31][28];
@@ -41,6 +44,7 @@ class Interface
 		static Mode _mode[5];
 		static bool _eaten[5];
 		static int _lives;
+        static int _level;
 		static unsigned int _points;
         static unsigned int _high_score;
 };

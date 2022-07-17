@@ -89,7 +89,8 @@ void Char::update_position()
 
 void Char::set_speed(double speed)
 {
-	_speed = speed * 75 / 10000;
+	_speed = speed * 75 / (10000 - _interface.get_level() * 1000);
+	std::cout<<"speed: "<<_speed<<std::endl;
 }
 
 bool Char::is_next_tile_available(Direction direction)

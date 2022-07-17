@@ -17,10 +17,12 @@ class Game
         int update_ghosts();
         void update_fruits();
         void restart();
+        void next_level();
 				bool is_win();
 				bool is_dead();
 				bool is_finish();
 				void set_direction(int name, Direction direction);
+				void reset_counter();
 				void dead();
 
     private:

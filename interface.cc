@@ -8,7 +8,7 @@
  *      u: Empty path
  *      o: Pill
  *      O: Big Pill
- *
+ *		F: Fruit
  */
 Tile Interface::_maze[31][28] = {
 {W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W},
@@ -88,6 +88,7 @@ Mode Interface::_mode[5] = {CHASE, CHASE, CHASE, CHASE, CHASE};
 Direction Interface::_directions[5] = {LEFT, LEFT, LEFT, LEFT, LEFT};
 
 int Interface::_lives = 3;
+int Interface::_level = 0;
 bool Interface::_eaten[5] = {false, false, false, false, false};
 
 void Interface::set_mode(int name,Mode mode)
@@ -181,6 +182,16 @@ bool Interface::get_eaten(int name)
 	return _eaten[name];
 }
 
+int Interface::get_level()
+{
+	return _level;
+}
+
+void Interface::add_level()
+{
+	_level++;
+}
+
 void Interface::reset_maze()
 {
 	int positions[5][2] = {{23, 13}, {11, 13}, {14, 11}, {14, 13}, {14, 15}}, i, j;
@@ -206,6 +217,11 @@ void Interface::reset_pills()
 void Interface::reset_lives()
 {
 	_lives = 3;
+}
+
+void Interface::reset_level()
+{
+	_level = 0;
 }
 
 void Interface::lose_life()
