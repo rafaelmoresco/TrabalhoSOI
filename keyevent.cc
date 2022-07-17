@@ -19,6 +19,8 @@ bool KeyEvent::handler()
 			_game->set_direction((int)PACMAN, RIGHT);
 		else if(key == P_PAUSE_KEY)
 			_paused = !_paused && true;
+		else if(key == R_RESTART_KEY)
+			_game->restart();
 		_key.set_handled(true);
 	}
 	return _paused;

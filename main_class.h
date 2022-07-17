@@ -349,5 +349,3 @@ private:
 __END_API
 
 #endif
-
-

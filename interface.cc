@@ -10,7 +10,41 @@
  *      O: Big Pill
  *
  */
-Tile Interface::_maze[31][28] ={
+Tile Interface::_maze[31][28] = {
+{W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W},
+{W,o,o,o,o,o,o,o,o,o,o,o,o,W,W,o,o,o,o,o,o,o,o,o,o,o,o,W},
+{W,o,W,W,W,W,o,W,W,W,W,W,o,W,W,o,W,W,W,W,W,o,W,W,W,W,o,W},
+{W,o,W,W,W,W,o,W,W,W,W,W,o,W,W,o,W,W,W,W,W,o,W,W,W,W,o,W},
+{W,O,W,W,W,W,o,W,W,W,W,W,o,W,W,o,W,W,W,W,W,o,W,W,W,W,O,W},
+{W,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,W},
+{W,o,W,W,W,W,o,W,W,o,W,W,W,W,W,W,W,W,o,W,W,o,W,W,W,W,o,W},
+{W,o,W,W,W,W,o,W,W,o,W,W,W,W,W,W,W,W,o,W,W,o,W,W,W,W,o,W},
+{W,o,o,o,o,o,o,W,W,o,o,o,o,W,W,o,o,o,o,W,W,o,o,o,o,o,o,W},
+{W,W,W,W,W,W,o,W,W,W,W,W,u,W,W,u,W,W,W,W,W,o,W,W,W,W,W,W},
+{u,u,u,u,u,W,o,W,W,W,W,W,u,W,W,u,W,W,W,W,W,o,W,u,u,u,u,u},
+{u,u,u,u,u,W,o,W,W,u,u,u,u,u,u,u,u,u,u,W,W,o,W,u,u,u,u,u},
+{u,u,u,u,u,W,o,W,W,u,W,W,W,G,G,W,W,W,u,W,W,o,W,u,u,u,u,u},
+{W,W,W,W,W,W,o,W,W,u,W,u,u,u,u,u,u,W,u,W,W,o,W,W,W,W,W,W},
+{P,u,u,u,u,u,o,u,u,u,W,u,u,u,u,u,u,W,u,u,u,o,u,u,u,u,u,P},
+{W,W,W,W,W,W,o,W,W,u,W,u,u,u,u,u,u,W,u,W,W,o,W,W,W,W,W,W},
+{u,u,u,u,u,W,o,W,W,u,W,W,W,W,W,W,W,W,u,W,W,o,W,u,u,u,u,u},
+{u,u,u,u,u,W,o,W,W,u,u,u,u,u,u,u,u,u,u,W,W,o,W,u,u,u,u,u},
+{u,u,u,u,u,W,o,W,W,u,W,W,W,W,W,W,W,W,u,W,W,o,W,u,u,u,u,u},
+{W,W,W,W,W,W,o,W,W,u,W,W,W,W,W,W,W,W,u,W,W,o,W,W,W,W,W,W},
+{W,o,o,o,o,o,o,o,o,o,o,o,o,W,W,o,o,o,o,o,o,o,o,o,o,o,o,W},
+{W,o,W,W,W,W,o,W,W,W,W,W,o,W,W,o,W,W,W,W,W,o,W,W,W,W,o,W},
+{W,o,W,W,W,W,o,W,W,W,W,W,o,W,W,o,W,W,W,W,W,o,W,W,W,W,o,W},
+{W,O,o,o,W,W,o,o,o,o,o,o,o,u,u,o,o,o,o,o,o,o,W,W,o,o,O,W},
+{W,W,W,o,W,W,o,W,W,o,W,W,W,W,W,W,W,W,o,W,W,o,W,W,o,W,W,W},
+{W,W,W,o,W,W,o,W,W,o,W,W,W,W,W,W,W,W,o,W,W,o,W,W,o,W,W,W},
+{W,o,o,o,o,o,o,W,W,o,o,o,o,W,W,o,o,o,o,W,W,o,o,o,o,o,o,W},
+{W,o,W,W,W,W,W,W,W,W,W,W,o,W,W,o,W,W,W,W,W,W,W,W,W,W,o,W},
+{W,o,W,W,W,W,W,W,W,W,W,W,o,W,W,o,W,W,W,W,W,W,W,W,W,W,o,W},
+{W,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,W},
+{W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W}
+};
+
+Tile Interface::_aux_maze[31][28] = {
 {W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W},
 {W,o,o,o,o,o,o,o,o,o,o,o,o,W,W,o,o,o,o,o,o,o,o,o,o,o,o,W},
 {W,o,W,W,W,W,o,W,W,W,W,W,o,W,W,o,W,W,W,W,W,o,W,W,W,W,o,W},
@@ -75,7 +109,7 @@ void Interface::set_direction(Direction direction, int i)
 	_directions[i] = direction;
 }
 
-void Interface::set_position(int i,int x, int y)
+void Interface::set_position(int i, int x, int y)
 {
 	_positions[x][y] = i;
 }
@@ -117,14 +151,24 @@ void Interface::add_points(int points)
 		_high_score = _points;
 }
 
-int Interface::get_score()
+int Interface::get_points()
 {
 	return _points;
+}
+
+void Interface::set_points(int points)
+{
+	_points = points;
 }
 
 int Interface::get_high_score()
 {
 	return _high_score;
+}
+
+void Interface::set_high_score(int high_score)
+{
+	_high_score = high_score;
 }
 
 void Interface::set_eaten(bool eaten,int name)
@@ -149,6 +193,19 @@ void Interface::reset_maze()
 			_directions[i] = LEFT;
 		}
 	}
+}
+
+void Interface::reset_pills()
+{
+	for(int i = 0; i < 31; i++){
+		for(int j = 0; j < 28; j++)
+			_maze[i][j] = _aux_maze[i][j];
+	}
+}
+
+void Interface::reset_lives()
+{
+	_lives = 3;
 }
 
 void Interface::lose_life()

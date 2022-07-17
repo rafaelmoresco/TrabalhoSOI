@@ -16,6 +16,7 @@ class Game
         bool update_dots();
         int update_ghosts();
         void update_fruits();
+        void restart();
 				bool is_win();
 				bool is_dead();
 				bool is_finish();

@@ -24,6 +24,7 @@ void Window::KeyboardInput()
 				_window.close();
 				break;
 			case sf::Event::KeyPressed:
+				std::cout << event.key.code << std::endl;
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 					std::cout << "Keyboard esquerda!" << std::endl;
 					_key.set_key(LEFT_KEY);
@@ -47,6 +48,10 @@ void Window::KeyboardInput()
 					_key.set_key(Q_EXIT_KEY);
 					_window.close();
 				}
+				else if(event.key.code == 17) {
+					_key.set_key(R_RESTART_KEY);
+					_key.set_handled(false);
+				}
 				break;
 			}
 	}
@@ -57,7 +62,7 @@ void Window::draw_scores()
 	int i,num;
 	int score_pos[2] = {48, 12};
 	int highscore_pos[2] = {128, 12};
-	int _points = _interface.get_score();
+	int _points = _interface.get_points();
 	int _high_score = _interface.get_high_score();
 
 	for(i = 0; _high_score % (int)pow(10, i) != _high_score; i++){
@@ -151,7 +156,7 @@ void Window::dead(int i)
 	sf::Sprite sprite;
 	draw_maze();	
 	sprite = dying[i];
-	sprite.setPosition(_interface.get_position_px((int)PACMAN,1) - 7, 24 + _interface.get_position_px((int)PACMAN,0) - 7);
+	sprite.setPosition(_interface.get_position_px((int)PACMAN, 1) - 7, 24 + _interface.get_position_px((int)PACMAN, 0) - 7);
 	_window.draw(sprite);
 	_window.display();
 }

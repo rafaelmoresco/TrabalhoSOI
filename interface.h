@@ -12,7 +12,7 @@ class Interface
 		int get_position_px(int x, int y);
 		Direction get_direction(int i);
 		Mode get_mode(int name);
-		int get_score();
+		int get_points();
 		int get_high_score();
 		bool get_eaten(int name);
 
@@ -21,6 +21,8 @@ class Interface
 		void set_position_px(int i, int x, int y);
 		void set_direction(Direction direction, int i);
 		void set_mode(int name, Mode mode);
+		void set_points(int points);
+		void set_high_score(int high_score);
 		void set_eaten(bool eaten, int name);
 
 		void add_points(int points);
@@ -28,8 +30,11 @@ class Interface
 		int get_lives();
 		
 		void reset_maze();
+		void reset_pills();
+		void reset_lives();
     private:
         static Tile _maze[31][28];
+        static Tile _aux_maze[31][28];
 		static int _positions[5][2];
 		static int _positions_px[5][2];
 		static Direction _directions[5];
