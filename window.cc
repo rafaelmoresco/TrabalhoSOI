@@ -10,8 +10,8 @@ Window::Window()
     _window.setKeyRepeatEnabled(false);
 	_view.reset(sf::FloatRect(0, 0, 224, 288));
 	_window.setView(_view);
-	pacsprite = 0;
-	ghostsprite = 0;
+	pacman_sprite = 0;
+	ghost_sprite = 0;
 	draw_maze();
 	draw_scores();
 }
@@ -115,8 +115,8 @@ void Window::draw_maze()
 void Window::draw_pacman()
 {
 	sf::Sprite sprite;
-	sprite = pacman[(int)(pacsprite / 4)][(int)_interface.get_direction((int)PACMAN)];
-	pacsprite == 11 ? pacsprite = 0 : pacsprite++;
+	sprite = pacman[(int)(pacman_sprite / 4)][(int)_interface.get_direction((int)PACMAN)];
+	pacman_sprite == 11 ? pacman_sprite = 0 : pacman_sprite++;
 	sprite.setPosition(_interface.get_position_px((int)PACMAN, 1) - 7, 24 + _interface.get_position_px((int)PACMAN,0) - 7);
 	_window.draw(sprite);
 }
@@ -124,18 +124,18 @@ void Window::draw_pacman()
 void Window::draw_ghost(Name name)
 {
 	if(_interface.get_mode((int)name) == FRIGHTENED && !_interface.get_eaten((int)name)){
-		frightened_b[(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
-		_window.draw(frightened_b[(int)(ghostsprite / 4)]);
+		frightened_b[(int)(ghost_sprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
+		_window.draw(frightened_b[(int)(ghost_sprite / 4)]);
 	}else{
 		if(!_interface.get_eaten((int)name)){
-			ghosts[(int)name - 1][(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
+			ghosts[(int)name - 1][(int)(ghost_sprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
 			_window.draw(ghosts[(int)name - 1][0]);
 		}
 
 		eyes[(int)_interface.get_direction((int)name)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
 		_window.draw(eyes[(int)_interface.get_direction((int)name)]);
 	}
-	ghostsprite == 7 ? ghostsprite = 0 : ghostsprite++;
+	ghost_sprite == 7 ? ghost_sprite = 0 : ghost_sprite++;
 }
 
 void Window::start()
