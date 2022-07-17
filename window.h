@@ -33,8 +33,8 @@ private:
 
 		Game *_game;
 		Interface _interface;
-		int pacsprite;
-		int ghostsprite;
+		int pacman_sprite;
+		int ghost_sprite;
     KeyInput _key;
 
 		static sf::Event event;

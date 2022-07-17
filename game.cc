@@ -36,7 +36,7 @@ bool Game::update_dots()
         counter++;
         _interface.add_points(10);
     }else if(_interface.get_maze(pacman_x, pacman_y) == O){
-        _interface.set_maze(u,pacman_x, pacman_y);
+        _interface.set_maze(u, pacman_x, pacman_y);
 		for(i = 0; i < 4; i++){
 			_ghosts[i]->set_mode(FRIGHTENED);
 			up_ghost = true;
