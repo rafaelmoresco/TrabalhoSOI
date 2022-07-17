@@ -24,7 +24,6 @@ void Window::KeyboardInput()
 				_window.close();
 				break;
 			case sf::Event::KeyPressed:
-				std::cout << event.key.code << std::endl;
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 					std::cout << "Keyboard esquerda!" << std::endl;
 					_key.set_key(LEFT_KEY);
@@ -129,11 +128,11 @@ void Window::draw_ghost(Name name)
 		_window.draw(frightened_b[(int)(ghostsprite / 4)]);
 	}else{
 		if(!_interface.get_eaten((int)name)){
-			ghosts[(int)name - 1][(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name,1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
+			ghosts[(int)name - 1][(int)(ghostsprite / 4)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
 			_window.draw(ghosts[(int)name - 1][0]);
 		}
 
-		eyes[(int)_interface.get_direction((int)name)].setPosition(_interface.get_position_px((int)name,1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
+		eyes[(int)_interface.get_direction((int)name)].setPosition(_interface.get_position_px((int)name, 1) - 7, 24 + _interface.get_position_px((int)name,0) - 7);
 		_window.draw(eyes[(int)_interface.get_direction((int)name)]);
 	}
 	ghostsprite == 7 ? ghostsprite = 0 : ghostsprite++;
@@ -159,11 +158,6 @@ void Window::dead(int i)
 	sprite.setPosition(_interface.get_position_px((int)PACMAN, 1) - 7, 24 + _interface.get_position_px((int)PACMAN, 0) - 7);
 	_window.draw(sprite);
 	_window.display();
-}
-
-void Window::win()
-{
-	_window.close();
 }
 
 void Window::finish()

@@ -89,7 +89,7 @@ void Char::update_position()
 
 void Char::set_speed(double speed)
 {
-	_speed = speed * 75 / 6000;
+	_speed = speed * 75 / 10000;
 }
 
 bool Char::is_next_tile_available(Direction direction)

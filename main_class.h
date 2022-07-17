@@ -68,10 +68,9 @@ public:
 private:
 	static void screen()
 	{
-		int i = 0;
 		_open = true;
 		window = new Window();
-		timer_start = 6000;
+		timer_start = 10000;
 		while(timer_start > 0){
 			window->start();
 			timer_start--;
@@ -80,22 +79,10 @@ private:
 		while(_open){
 			window->KeyboardInput();
 			if(!_paused){
-				if(_dead){
-					for(i = 0; i < 11; i++){
-						timer_start = 600; 
-						while(timer_start > 0){
-							window->dead(i);
-							timer_start--;
-						}
-					}
-				}else if(_win){
-					timer_start = 6000; 
-					while(timer_start > 0)
-						timer_start--;
-					window->win();
-					_open = false;
+				if(_win){
+					game->next_level();
 				}else if(_finish){
-					timer_start = 6000;
+					timer_start = 10000;
 					while(timer_start > 0)
 						timer_start--;
 					window->finish();
@@ -111,15 +98,15 @@ private:
 
 	static void key_event_input()
 	{
-			while(_open){
-				if(!_paused)
-					tm_sem->p();
-				_paused = event->handler();
-				if(!_paused)
-					tm_sem->v();
-				Thread::yield();
-			}
-			keyboard_thread->thread_exit(0);
+		while(_open){
+			if(!_paused)
+				tm_sem->p();
+			_paused = event->handler();
+			if(!_paused)
+				tm_sem->v();
+			Thread::yield();
+		}
+		keyboard_thread->thread_exit(0);
 	}
 
 	static void run()
@@ -128,15 +115,22 @@ private:
 		while(_open){
 			tm_sem->p();
 			if(_dead){
+				for(i = 0; i < 11; i++){
+					timer_start = 600; 
+					while(timer_start > 0){
+						window->dead(i);
+						timer_start--;
+					}
+				}
 				game->dead();
 				current_mode = 0;
 				_dead = false;
 			}
 			if(game->update_dots())
-				timer_frightened = 6000;
+				timer_frightened = 10000;
 			i = game->update_ghosts();
-			if(i>=0 && timer_ghost_house[i] == -1)
-				timer_ghost_house[i] = 0.5*(rand() % 7 + 1) * 6000;
+			if(i >= 0 && timer_ghost_house[i] == -1)
+				timer_ghost_house[i] = 0.5 * (rand() % 7 + 1) * 10000;
 
 			game->update_fruits();
 			_win = game->is_win();
@@ -155,7 +149,7 @@ private:
 	{
 		bool _leave = false;
 		while(_open){
-			if(blinky->is_in_ghost_house() && timer_ghost_house[(int)BLINKY-1] == 0){
+			if(blinky->is_in_ghost_house() && timer_ghost_house[(int)BLINKY - 1] == 0){
 				if(!_leave){
 					blinky->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();
@@ -186,7 +180,7 @@ private:
 	{
 		bool _leave = false;
 		while(_open){
-			if(pinky->is_in_ghost_house() && timer_ghost_house[(int)PINKY-1] == 0){
+			if(pinky->is_in_ghost_house() && timer_ghost_house[(int)PINKY - 1] == 0){
 				if(!_leave){
 					pinky->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();
@@ -217,7 +211,7 @@ private:
 	{
 		bool _leave = false;
 		while(_open){
-			if(inky->is_in_ghost_house() && timer_ghost_house[(int)INKY-1]==0){
+			if(inky->is_in_ghost_house() && timer_ghost_house[(int)INKY - 1] == 0){
 				if(!_leave){
 					inky->set_mode((Mode)(current_mode%2));
 					ghost_house_sem->p();
@@ -248,7 +242,7 @@ private:
 	{
 		bool _leave = false;
 		while(_open){
-			if(clyde->is_in_ghost_house() && timer_ghost_house[(int)CLYDE-1] == 0){
+			if(clyde->is_in_ghost_house() && timer_ghost_house[(int)CLYDE - 1] == 0){
 				if(!_leave){
 					clyde->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();

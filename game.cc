@@ -112,6 +112,23 @@ bool Game::is_finish()
 	return false;
 }
 
+void Game::reset_counter()
+{
+	counter = 0;
+}
+
+void Game::next_level()
+{
+	reset_counter();
+	_interface.reset_maze();
+	_interface.reset_pills();
+	_pacman->reset();
+	_ghosts[0]->reset();
+	_ghosts[1]->reset();
+	_ghosts[2]->reset();
+	_ghosts[3]->reset();
+}
+
 void Game::restart()
 {
 	_interface.set_points(0);
