@@ -91,11 +91,6 @@ int Interface::_lives = 3;
 int Interface::_level = 0;
 bool Interface::_eaten[5] = {false, false, false, false, false};
 
-void Interface::set_mode(int name,Mode mode)
-{
-	_mode[name] = mode;
-}
-
 Mode Interface::get_mode(int name)
 {
 	return _mode[name];
@@ -104,20 +99,6 @@ Mode Interface::get_mode(int name)
 int Interface::get_lives()
 {
 	return _lives;
-}
-void Interface::set_direction(Direction direction, int i)
-{
-	_directions[i] = direction;
-}
-
-void Interface::set_position(int i, int x, int y)
-{
-	_positions[x][y] = i;
-}
-
-void Interface::set_position_px(int i, int x, int y)
-{
-	_positions_px[x][y] = i;
 }
 
 Direction Interface::get_direction(int i)
@@ -140,41 +121,14 @@ Tile Interface::get_maze(int x, int y)
     return _maze[x][y];
 }
 
-void Interface::set_maze(Tile tile, int x, int y)
-{
-    _maze[x][y] = tile;
-}
-
-void Interface::add_points(int points)
-{
-	_points += points;
-	if(_high_score < _points)
-		_high_score = _points;
-}
-
 int Interface::get_points()
 {
 	return _points;
 }
 
-void Interface::set_points(int points)
-{
-	_points = points;
-}
-
 int Interface::get_high_score()
 {
 	return _high_score;
-}
-
-void Interface::set_high_score(int high_score)
-{
-	_high_score = high_score;
-}
-
-void Interface::set_eaten(bool eaten,int name)
-{
-	_eaten[name] = eaten;
 }
 
 bool Interface::get_eaten(int name)
@@ -187,9 +141,61 @@ int Interface::get_level()
 	return _level;
 }
 
+void Interface::set_mode(int name,Mode mode)
+{
+	_mode[name] = mode;
+}
+
+void Interface::set_direction(Direction direction, int i)
+{
+	_directions[i] = direction;
+}
+
+void Interface::set_position(int i, int x, int y)
+{
+	_positions[x][y] = i;
+}
+
+void Interface::set_position_px(int i, int x, int y)
+{
+	_positions_px[x][y] = i;
+}
+
+void Interface::set_maze(Tile tile, int x, int y)
+{
+    _maze[x][y] = tile;
+}
+
+void Interface::set_points(int points)
+{
+	_points = points;
+}
+
+void Interface::set_high_score(int high_score)
+{
+	_high_score = high_score;
+}
+
+void Interface::set_eaten(bool eaten,int name)
+{
+	_eaten[name] = eaten;
+}
+
+void Interface::add_points(int points)
+{
+	_points += points;
+	if(_high_score < _points)
+		_high_score = _points;
+}
+
 void Interface::add_level()
 {
 	_level++;
+}
+
+void Interface::lose_life()
+{
+	_lives--;
 }
 
 void Interface::reset_maze()
@@ -222,9 +228,4 @@ void Interface::reset_lives()
 void Interface::reset_level()
 {
 	_level = 0;
-}
-
-void Interface::lose_life()
-{
-	_lives--;
 }

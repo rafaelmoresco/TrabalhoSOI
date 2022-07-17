@@ -32,15 +32,14 @@ private:
     void load_and_bind_textures();
 
 		Game *_game;
-
-    KeyInput _key;
-		static sf::Event event;
-		sf::RenderWindow _window;
-		sf::View _view;
-
 		Interface _interface;
 		int pacsprite;
 		int ghostsprite;
+    KeyInput _key;
+
+		static sf::Event event;
+		sf::RenderWindow _window;
+		sf::View _view;
 
 		sf::Sprite pacman[3][4];
     sf::Sprite eyes[4];

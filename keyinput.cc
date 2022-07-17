@@ -8,15 +8,16 @@ DirectionKey KeyInput::get_key()
     return _key;
 }
 
+bool KeyInput::get_handled()
+{
+	return _handled;
+}
+
 void KeyInput::set_key(DirectionKey key)
 {
     _key = key;
 }
 
-bool KeyInput::get_handled()
-{
-	return _handled;
-}
 void KeyInput::set_handled(bool handled)
 {
 	_handled = handled;

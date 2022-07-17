@@ -10,22 +10,25 @@ class Char
 {
     public:
         Char(Name name);
+        int get_x();
+        int get_y();
+        double get_x_px();
+        double get_y_px();
+        bool get_eaten();
+
+				void set_x(int x);
+        void set_y(int y);
+        void set_x_px(double x_px);
+        void set_y_px(double y_px);
+        void set_eaten(bool eaten);
+
         void run();
         int move();
         void update_position(); 
         void set_speed(double speed);
 				void set_direction(Direction direction);
 				bool is_next_tile_available(Direction direction);
-        int get_x();
-        int get_y();
-        double get_x_px();
-        double get_y_px();
-				void set_x(int x);
-        void set_y(int y);
-        void set_x_px(double x_px);
-        void set_y_px(double y_px);
-        void set_eaten(bool eaten);
-        bool get_eaten();
+
     protected:
         Name _name;
         Interface _interface;

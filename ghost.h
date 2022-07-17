@@ -11,11 +11,13 @@ class Ghost : public Char
 {
     public:
 		Ghost(Name name);
+        Mode get_mode();
+
         void set_mode(Mode mode);
 		static void set_main_mode(Mode mode);
-        Mode get_mode();
         void set_eaten(bool eaten);
 		void set_ghost_house(bool ghost_house);
+
 		bool is_in_ghost_house();
 		void exit_ghost_house();
         bool crossroad();

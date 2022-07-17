@@ -9,6 +9,14 @@ Game::Game(Pacman *_pac, Ghost *_blinky, Ghost *_pinky, Ghost *_inky, Ghost *_cl
 	_ghosts[3] = _clyde;
 }
 
+void Game::set_direction(int name,Direction direction)
+{
+	if(name == 0)
+		_pacman->set_direction(direction);
+	else
+		_ghosts[name-1]->set_direction(direction);
+}
+
 void Game::update_interface()
 {
 	update_dots();
@@ -20,8 +28,8 @@ bool Game::update_dots()
 {
     int pacman_x = _pacman->get_x();
     int pacman_y = _pacman->get_y();
-		int i;
-		bool up_ghost = false;
+	int i;
+	bool up_ghost = false;
 
     if(_interface.get_maze(pacman_x, pacman_y) == o){
         _interface.set_maze(u, pacman_x, pacman_y);
@@ -81,14 +89,6 @@ void Game::update_fruits()
 		_interface.set_maze(u, 17, 13);
 		_interface.add_points(100);
 	}
-}
-
-void Game::set_direction(int name,Direction direction)
-{
-	if(name == 0)
-		_pacman->set_direction(direction);
-	else
-		_ghosts[name-1]->set_direction(direction);
 }
 
 bool Game::is_win()

@@ -12,6 +12,7 @@ class Game
 {
 		public:
 				Game(Pacman *_pac, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde);
+				void set_direction(int name, Direction direction);
         void update_interface();
         bool update_dots();
         int update_ghosts();
@@ -21,15 +22,14 @@ class Game
 				bool is_win();
 				bool is_dead();
 				bool is_finish();
-				void set_direction(int name, Direction direction);
 				void reset_counter();
 				void dead();
 
     private:
         Interface _interface;
-        unsigned int counter;
         Pacman *_pacman;
         Ghost *_ghosts[4];
+        unsigned int counter;
 };
 
 

@@ -12,9 +12,9 @@ class KeyEvent
 		KeyEvent(Game *game);
 		bool handler();
 	private:
-		bool _paused;
 		Game *_game;
 		KeyInput _key;
+		bool _paused;
 };
 
 #endif

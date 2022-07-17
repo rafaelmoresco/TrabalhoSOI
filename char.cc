@@ -14,6 +14,83 @@ Char::Char(Name name)
 	_eaten = false;
 }
 
+int Char::get_x()
+{
+    return _x;
+}
+
+int Char::get_y()
+{
+    return _y;
+}
+
+double Char::get_x_px()
+{
+    return _x_px;
+}
+
+double Char::get_y_px()
+{
+    return _y_px;
+}
+
+bool Char::get_eaten()
+{
+    return _eaten;
+}
+
+void Char::set_x(int x)
+{
+    _x = x;
+}
+
+void Char::set_y(int y)
+{
+    _y = y;
+}
+
+void Char::set_x_px(double x_px)
+{
+    _x_px = x_px;
+}
+
+void Char::set_y_px(double y_px)
+{
+    _y_px = y_px;
+}
+
+void Char::set_eaten(bool eaten)
+{
+    _eaten = eaten;
+	_interface.set_eaten(_eaten, (int)_name);
+}
+
+void Char::set_speed(double speed)
+{
+	_speed = speed * 75 / (10000 - _interface.get_level() * 1000);
+	std::cout<<"speed: "<<_speed<<std::endl;
+}
+
+void Char::set_direction(Direction direction)
+{
+	if((direction == UP && is_next_tile_available(UP)) || (direction == DOWN && is_next_tile_available(DOWN))){
+		if(_y_px >= _y * 8 + 2 &&  _y_px <= _y * 8 + 6){
+			_b_y = 0.0;
+			_y_px = _y * 8 + 4;
+			_direction = direction;
+			_interface.set_direction(direction, (int)_name);
+		}
+	}
+	if((direction == LEFT && is_next_tile_available(LEFT)) || (direction == RIGHT && is_next_tile_available(RIGHT))){
+		if(_x_px >= _x * 8 + 2 && _x_px <= _x * 8 + 6){
+			_b_x = 0.0;
+			_x_px = _x * 8 + 4;
+			_direction = direction;
+			_interface.set_direction(direction, (int)_name);
+		}
+	}
+}
+
 int Char::move()
 {
 	if(_direction == UP){
@@ -87,12 +164,6 @@ void Char::update_position()
 		_interface.set_position(_y, (int)_name, 1);
 }
 
-void Char::set_speed(double speed)
-{
-	_speed = speed * 75 / (10000 - _interface.get_level() * 1000);
-	std::cout<<"speed: "<<_speed<<std::endl;
-}
-
 bool Char::is_next_tile_available(Direction direction)
 {
 	int x = _x, y = _y;
@@ -105,75 +176,4 @@ bool Char::is_next_tile_available(Direction direction)
 	else if(direction == RIGHT)
 		y++;
 	return _interface.get_maze(x, y) != W && (_interface.get_maze(x, y) != G || _eaten);
-}
-
-void Char::set_direction(Direction direction)
-{
-	if((direction == UP && is_next_tile_available(UP)) || (direction == DOWN && is_next_tile_available(DOWN))){
-		if(_y_px >= _y * 8 + 2 &&  _y_px <= _y * 8 + 6){
-			_b_y = 0.0;
-			_y_px = _y * 8 + 4;
-			_direction = direction;
-			_interface.set_direction(direction, (int)_name);
-		}
-	}
-	if((direction == LEFT && is_next_tile_available(LEFT)) || (direction == RIGHT && is_next_tile_available(RIGHT))){
-		if(_x_px >= _x * 8 + 2 && _x_px <= _x * 8 + 6){
-			_b_x = 0.0;
-			_x_px = _x * 8 + 4;
-			_direction = direction;
-			_interface.set_direction(direction, (int)_name);
-		}
-	}
-}
-
-int Char::get_x()
-{
-    return _x;
-}
-
-int Char::get_y()
-{
-    return _y;
-}
-
-double Char::get_x_px()
-{
-    return _x_px;
-}
-
-double Char::get_y_px()
-{
-    return _y_px;
-}
-
-void Char::set_x(int x)
-{
-    _x = x;
-}
-
-void Char::set_y(int y)
-{
-    _y = y;
-}
-
-void Char::set_x_px(double x_px)
-{
-    _x_px = x_px;
-}
-
-void Char::set_y_px(double y_px)
-{
-    _y_px = y_px;
-}
-
-void Char::set_eaten(bool eaten)
-{
-    _eaten = eaten;
-	_interface.set_eaten(_eaten, (int)_name);
-}
-
-bool Char::get_eaten()
-{
-    return _eaten;
 }
