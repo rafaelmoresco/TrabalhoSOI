@@ -25,7 +25,6 @@ public:
     void draw_texture(unsigned int texture, int length, int height, double angle);
 		void start();
 		void dead(int i);
-		void win();
 		void finish();
 
 private:

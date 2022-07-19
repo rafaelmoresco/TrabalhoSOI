@@ -202,36 +202,36 @@ void Window::load_and_bind_textures()
 	pac_2_tex.loadFromFile("sprites/pacman/2.png");
 
     // Bind Pacman textures
-	pacman[0][0].setOrigin(pac_0_tex.getSize().x / 2, pac_0_tex.getSize().y / 2);
+	pacman[0][0].setOrigin(0, pac_0_tex.getSize().y);
     pacman[0][0].setTexture(pac_0_tex);
 	pacman[0][0].setRotation(90);
 	pacman[0][1].setTexture(pac_0_tex);
-	pacman[0][2].setOrigin(pac_0_tex.getSize().x / 2, pac_0_tex.getSize().y / 2);
+	pacman[0][2].setOrigin(pac_0_tex.getSize().x, 0);
 	pacman[0][2].setTexture(pac_0_tex);
 	pacman[0][2].rotate(270);
-	pacman[0][3].setOrigin(pac_0_tex.getSize().x / 2, pac_0_tex.getSize().y / 2);
+	pacman[0][3].setOrigin(pac_0_tex.getSize().x, pac_0_tex.getSize().y);
 	pacman[0][3].setTexture(pac_0_tex);
 	pacman[0][3].rotate(180);
 
-	pacman[1][0].setOrigin(pac_1_tex.getSize().x / 2, pac_1_tex.getSize().y/ 2);
+	pacman[1][0].setOrigin(0, pac_1_tex.getSize().y);
     pacman[1][0].setTexture(pac_1_tex);
 	pacman[1][0].rotate(90);
 	pacman[1][1].setTexture(pac_1_tex);
-	pacman[1][2].setOrigin(pac_1_tex.getSize().x / 2, pac_1_tex.getSize().y / 2);
+	pacman[1][2].setOrigin(pac_1_tex.getSize().x, 0);
 	pacman[1][2].setTexture(pac_1_tex);
 	pacman[1][2].rotate(270);
-	pacman[1][3].setOrigin(pac_1_tex.getSize().x / 2, pac_1_tex.getSize().y / 2);
+	pacman[1][3].setOrigin(pac_1_tex.getSize().x, pac_1_tex.getSize().y);
 	pacman[1][3].setTexture(pac_1_tex);
 	pacman[1][3].rotate(180);
 
-	pacman[2][0].setOrigin(pac_2_tex.getSize().x / 2, pac_2_tex.getSize().y / 2);
+	pacman[2][0].setOrigin(0, pac_2_tex.getSize().y);
 	pacman[2][0].setTexture(pac_2_tex);
 	pacman[2][0].rotate(90);
 	pacman[2][1].setTexture(pac_2_tex);
-	pacman[2][2].setOrigin(pac_2_tex.getSize().x / 2, pac_2_tex.getSize().y / 2);
+	pacman[2][2].setOrigin(pac_2_tex.getSize().x, 0);
 	pacman[2][2].setTexture(pac_2_tex);
 	pacman[2][2].rotate(270);
-	pacman[2][3].setOrigin(pac_2_tex.getSize().x / 2, pac_2_tex.getSize().y / 2);
+	pacman[2][3].setOrigin(pac_2_tex.getSize().x,pac_2_tex.getSize().y);
 	pacman[2][3].setTexture(pac_2_tex);
 	pacman[2][3].rotate(180);
 
