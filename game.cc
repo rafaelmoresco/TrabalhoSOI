@@ -9,7 +9,8 @@ Game::Game(Pacman *_pac, Ghost *_blinky, Ghost *_pinky, Ghost *_inky, Ghost *_cl
 	_ghosts[3] = _clyde;
 }
 
-void Game::set_direction(int name,Direction direction)
+// Define diracao do char de acordo com o nome.
+void Game::set_direction(int name, Direction direction)
 {
 	if(name == 0)
 		_pacman->set_direction(direction);
@@ -17,6 +18,7 @@ void Game::set_direction(int name,Direction direction)
 		_ghosts[name-1]->set_direction(direction);
 }
 
+// Invoca atualizacao de pontos, fantasmas e frutas.
 void Game::update_interface()
 {
 	update_dots();
@@ -24,6 +26,7 @@ void Game::update_interface()
 	update_fruits();
 }
 
+// Controle de atualizacao dos pontos.
 bool Game::update_dots()
 {
     int pacman_x = _pacman->get_x();
@@ -47,6 +50,7 @@ bool Game::update_dots()
 	return up_ghost;
 }
 
+// Controle de atualizacao dos fantasmas e seus respectivos modos.
 int Game::update_ghosts()
 {
 	int pacman_x, pacman_y, ghost_x[4], ghost_y[4], i, up_ghost = -1;
@@ -78,6 +82,7 @@ int Game::update_ghosts()
 	return up_ghost;
 }
 
+// Controle de atualizacao das frutas. Adicionando pontos quando o pacman come F.
 void Game::update_fruits()
 {
 	int pacman_x = _pacman->get_x();
@@ -85,12 +90,13 @@ void Game::update_fruits()
 
 	if(counter == 70 || counter == 170)
 		_interface.set_maze(F, 17, 13);
-	if(_interface.get_maze(pacman_x,pacman_y) == F){
+	if(_interface.get_maze(pacman_x, pacman_y) == F){
 		_interface.set_maze(u, 17, 13);
 		_interface.add_points(100);
 	}
 }
 
+// Verfica se a contagem de pontos eh 244, isso significa que o pacman comeu todos os pontos do nivel.
 bool Game::is_win()
 {
 	if(counter == 244)
@@ -98,6 +104,7 @@ bool Game::is_win()
 	return false;
 }
 
+// Verifica se pacman morreu.
 bool Game::is_dead()
 {
 	if(_pacman->get_eaten())
@@ -105,6 +112,7 @@ bool Game::is_dead()
 	return false;
 }
 
+// Verifica se pacman não possui mais vidas.
 bool Game::is_finish()
 {
 	if(_interface.get_lives() == 0)
@@ -117,6 +125,7 @@ void Game::reset_counter()
 	counter = 0;
 }
 
+// Quando passar de nivel eh necessario resetar o labirinto, e posicoes dos fantasmas e pacman.
 void Game::next_level()
 {
 	_interface.add_level();
@@ -130,6 +139,7 @@ void Game::next_level()
 	_ghosts[3]->reset();
 }
 
+// Quando solicitado a reinicializacao eh necessario resetar os pontos, o labirinto, as vidas, e posicoes dos fantasmas e pacman.
 void Game::restart()
 {
 	_interface.set_points(0);
@@ -143,6 +153,7 @@ void Game::restart()
 	_ghosts[3]->reset();
 }
 
+// Quando pacman morreu eh necessario resetar o labirinto, decrementar vidas, e posicoes dos fantasmas e pacman.
 void Game::dead()
 {
 	_interface.lose_life();

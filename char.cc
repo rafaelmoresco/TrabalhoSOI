@@ -65,12 +65,13 @@ void Char::set_eaten(bool eaten)
 	_interface.set_eaten(_eaten, (int)_name);
 }
 
+// Define velocidade do char, é aumentado a cada level.
 void Char::set_speed(double speed)
 {
 	_speed = speed * 75 / (10000 - _interface.get_level() * 1000);
-	std::cout<<"speed: "<<_speed<<std::endl;
 }
 
+// Define direcao, atualiza x e y, e atualiza direcao na interface
 void Char::set_direction(Direction direction)
 {
 	if((direction == UP && is_next_tile_available(UP)) || (direction == DOWN && is_next_tile_available(DOWN))){
@@ -91,6 +92,7 @@ void Char::set_direction(Direction direction)
 	}
 }
 
+// Realiza o controle de movimento do personagem. Checando se o movimento eh possivel. E por fim atualiza posicao.
 int Char::move()
 {
 	if(_direction == UP){
@@ -120,6 +122,7 @@ int Char::move()
 	return 1;
 }
 
+// Atualiza posicao x e y
 void Char::update_position()
 {
 	if(_x == 14 && _y_px < 6){
@@ -164,6 +167,7 @@ void Char::update_position()
 		_interface.set_position(_y, (int)_name, 1);
 }
 
+// De acordo com a direcao, verifica se o proximo tile esta disponivel
 bool Char::is_next_tile_available(Direction direction)
 {
 	int x = _x, y = _y;

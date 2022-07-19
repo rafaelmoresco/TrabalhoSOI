@@ -5,6 +5,7 @@ KeyEvent::KeyEvent(Game *game)
 	_game = game;
 }
 
+// Manipulador de entrada do teclado
 bool KeyEvent::handler()
 {
 	if(!_key.get_handled()){

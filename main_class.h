@@ -22,17 +22,20 @@ public:
 
 	static void run(void * name)
 	{
-		tm_sem = new Semaphore();
+// Instanciacao de semaforos
+		maze_sem = new Semaphore();
 		ghost_house_sem = new Semaphore();
 
+// Instanciacao do pacman, fantasmas, jogo e manipulador de eventos do teclado.
 		pacman = new Pacman(PACMAN);
 		blinky = new Ghost(BLINKY);
 		pinky = new Ghost(PINKY);
 		inky = new Ghost(INKY);
 		clyde = new Ghost(CLYDE);
-		game = new Game(pacman,blinky,pinky,inky,clyde);
+		game = new Game(pacman, blinky, pinky, inky, clyde);
 		event = new KeyEvent(game);
 
+// Instanciacao de threads para janela, teclado, jogo, 4 fantasmas e pacman.
 		window_thread = new Thread(screen);
 		keyboard_thread = new Thread(key_event_input);
 		game_thread = new Thread(run);
@@ -66,6 +69,7 @@ public:
 	~Main() {}
 
 private:
+// Controle da janela, tempo de inicio, entrada do teclado e tick.
 	static void screen()
 	{
 		_open = true;
@@ -96,14 +100,15 @@ private:
 		window_thread->thread_exit(0);
 	}
 
+// Controle de semaforo entrada do teclado.
 	static void key_event_input()
 	{
 		while(_open){
 			if(!_paused)
-				tm_sem->p();
+				maze_sem->p();
 			_paused = event->handler();
 			if(!_paused)
-				tm_sem->v();
+				maze_sem->v();
 			Thread::yield();
 		}
 		keyboard_thread->thread_exit(0);
@@ -113,7 +118,8 @@ private:
 	{
 		int i;
 		while(_open){
-			tm_sem->p();
+			maze_sem->p();
+			// Controle animacao de morte do pacman.
 			if(_dead){
 				for(i = 0; i < 11; i++){
 					timer_start = 600; 
@@ -133,18 +139,20 @@ private:
 				timer_ghost_house[i] = 0.5 * (rand() % 7 + 1) * 10000;
 
 			game->update_fruits();
+			// Verifica se houve vitoria ou foi finalizado.
 			_win = game->is_win();
 			_finish = game->is_finish();
 
 			if(!_finish)
 				_dead = game->is_dead();
 
-			tm_sem->v();
+			maze_sem->v();
 			Thread::yield();
 		}
 		game_thread->thread_exit(0);
 	}
 
+// Comportamento do blinky.
 	static void ghost_blinky_behavior()
 	{
 		bool _leave = false;
@@ -154,28 +162,29 @@ private:
 					blinky->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();
 				}
-				tm_sem->p();
+				maze_sem->p();
 				blinky->exit_ghost_house();
-				tm_sem->v();
+				maze_sem->v();
 				_leave = blinky->is_in_ghost_house();
 				if(!_leave){
 					timer_ghost_house[(int)BLINKY-1] = -1;
 					ghost_house_sem->v();
 				}
 			}else{
-				tm_sem->p();
+				maze_sem->p();
 				if(timer_mode == 0 || timer_frightened == 0)
 					blinky->set_mode((Mode)(current_mode % 2));
 				blinky->move();
 				if(blinky->crossroad())
 					blinky->crossroad_decision();
-				tm_sem->v();
+				maze_sem->v();
 			}
 			Thread::yield();
 		}
 		blinky_thread->thread_exit(0);
 	}
 
+// Comportamento do pinky.
 	static void ghost_pinky_behavior()
 	{
 		bool _leave = false;
@@ -185,28 +194,29 @@ private:
 					pinky->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();
 				}
-				tm_sem->p();
+				maze_sem->p();
 				pinky->exit_ghost_house();
-				tm_sem->v();
+				maze_sem->v();
 				_leave = pinky->is_in_ghost_house();
 				if(!_leave){
 					timer_ghost_house[(int)PINKY-1] = -1;
 					ghost_house_sem->v();
 				}
 			}else{
-				tm_sem->p(); 
+				maze_sem->p(); 
 				if(timer_mode == 0 || timer_frightened == 0)
 					pinky->set_mode((Mode)(current_mode % 2));
 				pinky->move();
 				if(pinky->crossroad())
 					pinky->crossroad_decision();
-				tm_sem->v();
+				maze_sem->v();
 			}
 			Thread::yield();
 		}
 		pinky_thread->thread_exit(0);
 	}
 
+// Comportamento do inky.
 	static void ghost_inky_behavior()
 	{
 		bool _leave = false;
@@ -216,28 +226,29 @@ private:
 					inky->set_mode((Mode)(current_mode%2));
 					ghost_house_sem->p();
 				}
-				tm_sem->p();
+				maze_sem->p();
 				inky->exit_ghost_house();
-				tm_sem->v();
+				maze_sem->v();
 				_leave = inky->is_in_ghost_house();
 				if(!_leave){
 					timer_ghost_house[(int)INKY-1] = -1;
 					ghost_house_sem->v();
 				}
 			}else{
-				tm_sem->p();
+				maze_sem->p();
 				if(timer_mode == 0 || timer_frightened == 0)
 					inky->set_mode((Mode)(current_mode % 2));
 				inky->move();
 				if(inky->crossroad())
 					inky->crossroad_decision();
-				tm_sem->v();
+				maze_sem->v();
 			}
 			Thread::yield();
 		}
 		inky_thread->thread_exit(0);
 	}
 
+// Comportamento do clyde.
 	static void ghost_clyde_behavior()
 	{
 		bool _leave = false;
@@ -247,34 +258,35 @@ private:
 					clyde->set_mode((Mode)(current_mode % 2));
 					ghost_house_sem->p();
 				}
-				tm_sem->p();
+				maze_sem->p();
 				clyde->exit_ghost_house();
-				tm_sem->v();
+				maze_sem->v();
 				_leave = clyde->is_in_ghost_house();
 				if(!_leave){
 					timer_ghost_house[(int)CLYDE-1] = -1;
 					ghost_house_sem->v();
 				}
 			}else{
-				tm_sem->p();
+				maze_sem->p();
 				if(timer_mode == 0 || timer_frightened == 0)
 					clyde->set_mode((Mode)(current_mode % 2));
 				clyde->move();
 				if(clyde->crossroad())
 					clyde->crossroad_decision();
-				tm_sem->v();
+				maze_sem->v();
 			}
 			Thread::yield();
 		}
 		clyde_thread->thread_exit(0);
 	}
 
+// Comportamento do pacman
 	static void pacman_behavior()
 	{
 		while(_open){
-			tm_sem->p();
+			maze_sem->p();
 			pacman->move();
-			tm_sem->v(); 
+			maze_sem->v(); 
 			Thread::yield();
 		}
 		pacman_thread->thread_exit(0);
@@ -290,7 +302,7 @@ private:
 
 		if(timer_mode == -1){
 			if(current_mode < 7){
-				timer_mode = mode_periods[current_mode]*3000;
+				timer_mode = mode_periods[current_mode] * 3000;
 				current_mode++; 
 			}
 		}
@@ -305,7 +317,7 @@ private:
 	}
 
 	private:
-		static Semaphore *tm_sem;
+		static Semaphore *maze_sem;
 		static Semaphore *ghost_house_sem;
 
 		static Window *window;

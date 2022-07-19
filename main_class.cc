@@ -2,7 +2,7 @@
 
 __BEGIN_API
 
-Semaphore *Main::tm_sem = 0;
+Semaphore *Main::maze_sem = 0;
 Semaphore *Main::ghost_house_sem = 0;
 
 Window *Main::window;

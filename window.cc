@@ -16,10 +16,11 @@ Window::Window()
 	draw_scores();
 }
 
+// Gerenciamento de evento de pressionamento de tecla.
 void Window::KeyboardInput()
 {
-	while (_window.pollEvent(event)){
-		switch (event.type) {
+	while(_window.pollEvent(event)){
+		switch(event.type) {
 			case sf::Event::Closed:
 				_window.close();
 				break;
@@ -46,8 +47,7 @@ void Window::KeyboardInput()
 				} else if(event.key.code == 16) {
 					_key.set_key(Q_EXIT_KEY);
 					_window.close();
-				}
-				else if(event.key.code == 17) {
+				} else if(event.key.code == 17) {
 					_key.set_key(R_RESTART_KEY);
 					_key.set_handled(false);
 				}
@@ -56,13 +56,14 @@ void Window::KeyboardInput()
 	}
 }
 
+// Desenha pontuacoes.
 void Window::draw_scores()
 {
-	int i,num;
-	int score_pos[2] = {48, 12};
-	int highscore_pos[2] = {128, 12};
 	int _points = _interface.get_points();
 	int _high_score = _interface.get_high_score();
+	int score_pos[2] = {48, 12};
+	int highscore_pos[2] = {128, 12};
+	int i, num;
 
 	for(i = 0; _high_score % (int)pow(10, i) != _high_score; i++){
 		num = (_points % (int)pow(10, i + 1) - _points % (int)pow(10, i)) / pow(10, i);
@@ -76,6 +77,7 @@ void Window::draw_scores()
 	}
 }
 
+// Desenha labirinto.
 void Window::draw_maze()
 {
 	int i, j;
@@ -112,6 +114,7 @@ void Window::draw_maze()
 	}
 }
 
+// Desenha pacman.
 void Window::draw_pacman()
 {
 	sf::Sprite sprite;
@@ -121,6 +124,7 @@ void Window::draw_pacman()
 	_window.draw(sprite);
 }
 
+// Desenha fantasma.
 void Window::draw_ghost(Name name)
 {
 	if(_interface.get_mode((int)name) == FRIGHTENED && !_interface.get_eaten((int)name)){
@@ -138,6 +142,7 @@ void Window::draw_ghost(Name name)
 	ghost_sprite == 7 ? ghost_sprite = 0 : ghost_sprite++;
 }
 
+// Invoca desenho de fantasmas e pacman.
 void Window::start()
 {
 	draw_ghost(BLINKY);
@@ -150,6 +155,7 @@ void Window::start()
 	_window.display();
 }
 
+// Desenho morte do pacman.
 void Window::dead(int i)
 {
 	sf::Sprite sprite;
@@ -160,6 +166,7 @@ void Window::dead(int i)
 	_window.display();
 }
 
+// Finaliza janela.
 void Window::finish()
 {
 	_window.close();

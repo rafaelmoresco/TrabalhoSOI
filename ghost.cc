@@ -10,6 +10,7 @@ Ghost::Ghost(Name name) : Char(name)
 	_ghost_house = false;
 }
 
+// Definicao do modo.
 void Ghost::set_mode(Mode mode)
 {
 	if(!_eaten ){
@@ -55,6 +56,7 @@ bool Ghost::is_in_ghost_house()
 	return _ghost_house;
 }
 
+// Saida da casa e definicao de direcao, modo e posicao.
 void Ghost::exit_ghost_house()
 {
 	if(_y_px > 108)
@@ -79,6 +81,7 @@ void Ghost::exit_ghost_house()
 	_interface.set_position_px(_y_px, (int)_name, 1);
 }
 
+// Verifica cruzamento.
 bool Ghost::crossroad()
 {
 	if(_x != _crossroad[0] || _y != _crossroad[1]){
@@ -99,6 +102,7 @@ bool Ghost::crossroad()
 	return false;
 }
 
+// Tomada de decisao para cruzamento.
 void Ghost::crossroad_decision()
 {
 	int i, directions_available = 0, direction;
@@ -117,7 +121,7 @@ void Ghost::crossroad_decision()
 	if(directions_available > 1){
 		if(_mode == FRIGHTENED && !_eaten){
 			do{
-				direction = rand()%4;
+				direction = rand() % 4;
 			}while(!available[direction]);
 		} else{
 			if(_eaten){
@@ -131,7 +135,7 @@ void Ghost::crossroad_decision()
 			
 			for(i = 0; i < 4; i++){
 				distance[i] = distance_target_tiles((Direction)i);
-				if(available[i] && distance[i]<dist){
+				if(available[i] && distance[i] < dist){
 					dist = distance[i];
 					direction = i;
 				}
@@ -142,6 +146,7 @@ void Ghost::crossroad_decision()
 	set_direction((Direction)direction); 
 }
 
+// Tiles de alvo para o modo scatter.
 void Ghost::target_tiles_scatter()
 {
 	if(_name == BLINKY){
@@ -159,13 +164,14 @@ void Ghost::target_tiles_scatter()
 	}
 }
 
-void  Ghost::target_tiles_chase()
+// Tiles de alvo para o modo chase.
+void Ghost::target_tiles_chase()
 {
-	Direction direction = _interface.get_direction((int)PACMAN);
-	int x = _interface.get_position((int)PACMAN,0);
-	int y = _interface.get_position((int)PACMAN,1);
+	Direction direction = _interface.get_direction((int) PACMAN);
+	int x = _interface.get_position((int)PACMAN, 0);
+	int y = _interface.get_position((int)PACMAN, 1);
 	if(_name == BLINKY){
-		_target_tiles[0] = x ;
+		_target_tiles[0] = x;
 		_target_tiles[1] = y;
 	}else if(_name == PINKY){
 		if(direction == UP)
@@ -200,6 +206,7 @@ void  Ghost::target_tiles_chase()
 	}
 }
 
+// Inverte direcao.
 void Ghost::reverse_direction()
 {
     int direction = (int)_direction;
@@ -207,6 +214,7 @@ void Ghost::reverse_direction()
     _direction = (Direction)direction;
 }
 
+// Verifica se a direcao esta disponivel.
 bool Ghost::is_direction_available(Direction direction)
 {
 	bool crossroad_behavior = false;
@@ -225,6 +233,7 @@ bool Ghost::is_direction_available(Direction direction)
 	return is_next_tile_available(direction) && reverse_direction && !crossroad_behavior;
 }
 
+// Encontra a distancia entre x e y da direcao.
 double Ghost::distance_target_tiles(Direction direction)
 {
 	int x = _x, y = _y;
@@ -237,14 +246,16 @@ double Ghost::distance_target_tiles(Direction direction)
 	else if(direction == RIGHT)
 		y++;
 
-	return sqrt(pow(x-_target_tiles[0], 2) + pow(y-_target_tiles[1], 2));
+	return sqrt(pow(x - _target_tiles[0], 2) + pow(y - _target_tiles[1], 2));
 }
 
+// Encontra a distancia entre tiles
 double Ghost::distance_target_tiles(int x1, int y1, int x2, int y2)
 {
-	return sqrt(pow(x1-x2, 2) + pow(y1 - y2, 2));
+	return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
+// Reseta direcao, velocidade, posicao, modo e cruzamento.
 void Ghost::reset()
 {
 	_direction = LEFT;

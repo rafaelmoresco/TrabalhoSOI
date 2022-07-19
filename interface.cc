@@ -181,6 +181,7 @@ void Interface::set_eaten(bool eaten,int name)
 	_eaten[name] = eaten;
 }
 
+// Somador de pontos.
 void Interface::add_points(int points)
 {
 	_points += points;
@@ -188,16 +189,19 @@ void Interface::add_points(int points)
 		_high_score = _points;
 }
 
+// Incrementa nivel.
 void Interface::add_level()
 {
 	_level++;
 }
 
+// Decrementa vidas.
 void Interface::lose_life()
 {
 	_lives--;
 }
 
+// Reseta modo, posicoes e direcao do maze.
 void Interface::reset_maze()
 {
 	int positions[5][2] = {{23, 13}, {11, 13}, {14, 11}, {14, 13}, {14, 15}}, i, j;
@@ -212,6 +216,7 @@ void Interface::reset_maze()
 	}
 }
 
+// Reseta pontos de pilula.
 void Interface::reset_pills()
 {
 	for(int i = 0; i < 31; i++){
